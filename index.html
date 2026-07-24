@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="description" content="Портфолио Ангелины Дубатовой — веб-дизайн и разработка цифровых продуктов." />
+    <meta property="og:title" content="dubatoff design" />
+    <meta property="og:description" content="I CREATE ART & TASTE TO DIGITAL WORK" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./public/assets/portrait.png" />
+    <title>dubatoff design</title>
+    <link rel="icon" type="image/png" href="./public/favicon.png" />
+    <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="loader" id="loader" aria-label="Загрузка сайта">
+      <span class="loader__tick" id="loaderLine" aria-hidden="true"></span>
+      <span class="sr-only" id="loaderPercent">000</span>
+    </div>
+
+    <div class="cursor" id="cursor" aria-hidden="true">
+      <span class="cursor__dot"></span>
+      <span class="cursor__ring"></span>
+      <span class="cursor__label pixel">VIEW</span>
+    </div>
+    <div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
+
+    <img class="fixed-mark" id="fixedMark" src="./public/assets/fixed-mark.png" alt="" aria-hidden="true" />
+
+    <main>
+      <section class="hero" id="main" aria-label="Главный экран">
+        <div class="hero__background" aria-hidden="true"></div>
+        <canvas class="hero__water-canvas" id="heroWaterCanvas" aria-hidden="true"></canvas>
+        <div class="code-rain" id="codeRain" aria-hidden="true"></div>
+
+        <header class="hero__header">
+          <div class="brand-block">
+            <a class="brand pixel" href="#main">dubatoff design</a>
+            <p>Design&amp;Develop</p>
+          </div>
+          <nav class="nav pixel" aria-label="Навигация">
+            <a href="#main">main</a>
+            <a href="#about">about</a>
+            <a href="#work">work</a>
+            <a href="#contact">contact[/]</a>
+          </nav>
+          <p class="hero__intro">
+            Я Ангелина Дубатова — веб-дизайнер<br />
+            и разработчик Создаю сайты и цифровые<br />
+            продукты, помогая брендам обрести<br />
+            собственный визуальный язык
+          </p>
+        </header>
+
+        <div class="hero__center" aria-label="dubatoff">
+          <img class="hero__word-image" src="./public/assets/hero-word-figma-exact.png" alt="dubatoff" />
+          <canvas class="hero__word-canvas" id="heroWordCanvas" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="hero__lower">
+          <h1>I CREATE<br />ART&amp;TASTE<br />TO DIGITAL WORK</h1>
+        </div>
+        <img class="hero__cursor-decoration" src="./public/assets/hero-cursor-decoration.png" alt="" aria-hidden="true" />
+        <img class="hero__bottom-logo" src="./public/assets/hero-bottom-logo.png" alt="" aria-hidden="true" />
+      </section>
+
+      <section class="about technical-bg" id="about" aria-labelledby="aboutTitle">
+        <a class="about__brand pixel" href="#main">DUBATOFF DESIGN</a>
+        <nav class="about__nav pixel" aria-label="Навигация">
+          <a href="#main">MAIN</a><a class="is-active" href="#about">ABOUT</a><a href="#work">WORK</a><a href="#contact">CONTACT</a>
+        </nav>
+        <div class="section-index pixel"><span>ABOUT / 01</span><span>DUBATOFF©2026</span></div>
+        <div class="about__stage">
+          <figure class="about__portrait reveal-paper">
+            <img src="./public/assets/about-portrait-figma.png" alt="Портрет Ангелины Дубатовой" />
+            <figcaption class="pixel"><span>ANGELINA DUBATOVA</span><span>WEB DESIGNER / DEVELOPER</span></figcaption>
+          </figure>
+          <h2 id="aboutTitle" class="about__copy">
+            <span>Создаю сайты и цифровые продукты,</span>
+            <span>где эстетика встречается</span>
+            <span>с функциональностью. Помогаю брендам</span>
+            <span>находить собственный визуальный язык</span>
+            <span>и превращать идеи в цифровые решения,</span>
+            <span>которыми хочется пользоваться.</span>
+          </h2>
+          <div class="about__signature" aria-label="Роспись Dubatoff">
+            <img src="./public/assets/about-signature-figma.png" alt="" />
+          </div>
+          <p class="about__stack-label pixel">&lt;stack&gt;</p>
+          <div class="about__stack pixel">
+            <span>Figma</span><span>Adobe Photoshop</span><span>Adobe Illustrator</span>
+            <span>Python</span><span>SQL</span><span>HTML</span><span>CSS</span>
+          </div>
+          <div class="about__folder" aria-hidden="true"></div>
+        </div>
+        <div class="about__footer pixel">
+          <span>DESIGN &amp; DEVELOPING</span>
+          <nav aria-label="Навигация раздела About">
+            <a href="#main">main</a><a href="#about">about</a><a href="#work">work</a><a href="#contact">contact[/]</a>
+          </nav>
+          <span>1702 X&nbsp;&nbsp;1510 Y</span>
+        </div>
+      </section>
+
+      <section class="works" id="work" aria-labelledby="worksTitle">
+        <h2 id="worksTitle" class="sr-only">Работы</h2>
+
+        <article class="portfolio-screen portfolio-screen--akkon-booking">
+          <img class="portfolio-screen__reference" src="./public/assets/screen-03-reference.jpg" alt="" />
+          <div class="screen-card screen-card--akkon-booking work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-01-akkon.jpg" alt="AKKON — экспортная букинг-форма" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-akkon-booking.png" alt="" />
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio-screen portfolio-screen--akkon-admin">
+          <img class="portfolio-screen__reference" src="./public/assets/screen-04-reference.jpg" alt="" />
+          <div class="screen-card screen-card--akkon-admin work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-02-akkon.jpg" alt="AKKON — административный аккаунт" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-akkon-admin.png" alt="" />
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio-screen portfolio-screen--stl">
+          <img class="portfolio-screen__reference" src="./public/assets/screen-05-reference.jpg" alt="" />
+          <div class="screen-card screen-card--stl-main work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-04-stl.jpg" alt="STL — главная страница" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-stl-main.png" alt="" />
+            </div>
+          </div>
+          <div class="screen-card screen-card--stl-page work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-05-stl.jpg" alt="STL — страница направлений" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-stl-page.png" alt="" />
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio-screen portfolio-screen--agro">
+          <img class="portfolio-screen__reference" src="./public/assets/screen-06-reference.jpg" alt="" />
+          <div class="screen-card screen-card--agro work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-03-agrosmena.jpg" alt="Министерство сельского хозяйства РФ — АгроСмена" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-akkon-booking.png" alt="" />
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio-screen portfolio-screen--music">
+          <img class="portfolio-screen__reference" src="./public/assets/screen-07-reference.jpg" alt="" />
+          <div class="screen-card screen-card--music-player work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-06-adredash.jpg" alt="ADREDASH — музыкальный релиз" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-music-player.png" alt="" />
+            </div>
+          </div>
+          <div class="screen-card screen-card--music-a work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-07-adredash.jpg" alt="ADREDASH — обложка Я схожу с ума" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-music-cover-a.png" alt="" />
+            </div>
+          </div>
+          <div class="screen-card screen-card--music-b work-card is-visible" data-tilt>
+            <div class="work-card__paper">
+              <img class="screen-card__main" src="./public/assets/work-08-adredash.jpg" alt="ADREDASH — обложка музыкального релиза" />
+              <img class="screen-card__placeholder" src="./public/assets/placeholder-music-cover-b.png" alt="" />
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="contact" id="contact" aria-labelledby="contactTitle">
+        <div class="contact__stage">
+          <div class="contact__chrome pixel">
+            <a class="contact__brand" href="#main">DUBATOFF DESIGN</a>
+            <nav aria-label="Навигация">
+              <a href="#main">MAIN</a><a href="#about">ABOUT</a><a href="#work">WORK</a><a class="is-active" href="#contact">CONTACT</a>
+            </nav>
+            <span class="contact__clock" id="clock">GMT+3 MSK 17:17 27°</span>
+            <span class="contact__coords">1702 X 1510 Y</span>
+          </div>
+          <canvas id="fireworks" aria-hidden="true"></canvas>
+          <div class="contact__noise" aria-hidden="true"></div>
+          <div class="contact__cursor-3d" aria-hidden="true"><span></span></div>
+          <div class="contact__content">
+            <p class="pixel contact__eyebrow">HAVE A PROJECT? / LET'S TALK</p>
+            <h2 id="contactTitle">CONTACT ME</h2>
+            <a class="contact__button" href="https://t.me/dubatoff17" target="_blank" rel="noreferrer">
+              <span>Click</span><span class="contact__button-arrow">↗</span>
+            </a>
+          </div>
+          <footer class="contact__footer pixel"><span>DUBATOFF©2026</span><span>TELEGRAM / DUBATOFF17</span></footer>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
