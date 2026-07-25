@@ -16,7 +16,6 @@
 
   body.classList.add("is-loading");
   body.classList.add("native-cursor");
-  fixedMark.classList.add("hero-hidden");
 
   function runLoader() {
     const start = performance.now();
@@ -770,19 +769,28 @@
       const heroIsActive = entry.isIntersecting && entry.intersectionRatio > 0.42;
       heroVisible = entry.isIntersecting;
       body.classList.toggle("native-cursor", heroIsActive);
-      fixedMark.classList.toggle("hero-hidden", heroIsActive);
     });
   }, { threshold: [0, 0.42, 0.75] });
   heroCursorObserver.observe(hero);
 
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
+      const isAboutSignature = entry.target.classList.contains("about__signature");
+
+      if (isAboutSignature) {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("is-visible", "is-written");
+          void entry.target.offsetWidth;
+          entry.target.classList.add("is-visible");
+        } else {
+          entry.target.classList.remove("is-visible", "is-written");
+          delete entry.target.dataset.written;
+        }
+        return;
+      }
+
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
-        if (entry.target.classList.contains("about__signature") && !entry.target.dataset.written) {
-          entry.target.dataset.written = "true";
-          window.setTimeout(() => entry.target.classList.add("is-written"), reduceMotion ? 0 : 2550);
-        }
       }
     });
   }, { threshold: 0.12, rootMargin: "0px 0px -8%" });
@@ -956,7 +964,6 @@
     entries.forEach((entry) => {
       const active = entry.isIntersecting;
       contact.classList.toggle("is-active", active);
-      fixedMark.classList.toggle("is-hidden", active);
       cursor.classList.toggle("is-contact", active);
       if (active) resizeCanvas();
     });
