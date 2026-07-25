@@ -1364,14 +1364,14 @@ img {
       rgba(227, 227, 219, .13) calc(34.375% - .5px),
       rgba(227, 227, 219, .13) calc(34.375% + .5px),
       transparent calc(34.375% + .5px),
-      transparent calc(65.52% - .5px),
-      rgba(227, 227, 219, .13) calc(65.52% - .5px),
-      rgba(227, 227, 219, .13) calc(65.52% + .5px),
-      transparent calc(65.52% + .5px),
-      transparent calc(96.72% - .5px),
-      rgba(227, 227, 219, .13) calc(96.72% - .5px),
-      rgba(227, 227, 219, .13) calc(96.72% + .5px),
-      transparent calc(96.72% + .5px)
+      transparent calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% + .5px),
+      transparent calc(65.52083% + .5px),
+      transparent calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% + .5px),
+      transparent calc(96.66667% + .5px)
     );
 }
 .portfolio-screen::after {
