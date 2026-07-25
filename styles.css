@@ -1422,20 +1422,15 @@ img {
   pointer-events: none;
   transition: opacity .16s ease;
 }
-.screen-card__akkon-label-mask {
-  position: absolute;
-  top: 0;
-  right: 2.7%;
-  z-index: 5;
-  width: 17.4%;
-  height: 5.4%;
+.screen-card:hover .screen-card__akkon-label { opacity: 1; }
+.screen-card--akkon-booking .work-card__paper,
+.screen-card--akkon-admin .work-card__paper {
   background: #d9d4ce;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .16s ease;
 }
-.screen-card:hover .screen-card__akkon-label,
-.screen-card:hover .screen-card__akkon-label-mask { opacity: 1; }
+.screen-card--akkon-booking .screen-card__placeholder,
+.screen-card--akkon-admin .screen-card__placeholder {
+  clip-path: inset(5.5% 0 0);
+}
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
