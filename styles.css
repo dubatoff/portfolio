@@ -1380,57 +1380,6 @@ img {
 }
 .screen-card:hover .screen-card__main { opacity: 0; }
 .screen-card:hover .screen-card__placeholder { opacity: 1; transform: scale(1); }
-.screen-card__lowered-label {
-  position: absolute;
-  top: 2.2%;
-  right: 3.2%;
-  z-index: 5;
-  box-sizing: border-box;
-  padding: .08em .28em .04em;
-  color: #121312;
-  background: #c0fe04;
-  box-shadow: 0 -1.2em 0 1.2em #d9d4ce;
-  font: clamp(7px, .72vw, 14px)/1.05 "DOSFont", monospace;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .16s ease;
-}
-.screen-card:hover .screen-card__lowered-label { opacity: 1; }
-.screen-card--music-a .screen-card__lowered-label,
-.screen-card--music-b .screen-card__lowered-label {
-  font-size: clamp(5px, .52vw, 10px);
-}
-.screen-card__akkon-label {
-  position: absolute;
-  top: 0;
-  right: 3.16%;
-  z-index: 6;
-  display: flex;
-  width: 16.57%;
-  height: 4.55%;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  padding-top: .08em;
-  color: #121312;
-  background: #c0fe04;
-  font: clamp(10px, 1.15vw, 22px)/1 "DOSFont", monospace;
-  text-indent: .12em;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .16s ease;
-}
-.screen-card:hover .screen-card__akkon-label { opacity: 1; }
-.screen-card--akkon-booking .work-card__paper,
-.screen-card--akkon-admin .work-card__paper {
-  background: #d9d4ce;
-}
-.screen-card--akkon-booking .screen-card__placeholder,
-.screen-card--akkon-admin .screen-card__placeholder {
-  clip-path: inset(5.5% 0 0);
-}
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
