@@ -77,7 +77,7 @@
     const drops = [];
     const compact = window.innerWidth < 720;
 
-    starts.slice(0, compact ? 10 : starts.length).forEach((start, index) => {
+    starts.slice(0, compact ? 8 : 12).forEach((start, index) => {
       const asset = assets[start[2]];
       const drop = document.createElement("img");
       drop.className = "code-drop";
@@ -118,12 +118,18 @@
     });
 
     let previous = performance.now();
+    let lastPhysicsDraw = 0;
     function animate(now) {
       if (!heroVisible || document.hidden || reduceMotion) {
         previous = now;
         requestAnimationFrame(animate);
         return;
       }
+      if (now - lastPhysicsDraw < 30) {
+        requestAnimationFrame(animate);
+        return;
+      }
+      lastPhysicsDraw = now;
       const dt = Math.min(0.034, (now - previous) / 1000);
       previous = now;
       const width = hero.clientWidth;
@@ -322,7 +328,7 @@
     let ready = false;
 
     function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.15);
       const width = Math.max(1, Math.round(hero.clientWidth * dpr));
       const height = Math.max(1, Math.round(hero.clientHeight * dpr));
       if (canvas.width !== width || canvas.height !== height) {
@@ -394,11 +400,17 @@
       );
     }, 1450);
 
+    let lastSurfaceDraw = 0;
     function render(nowMs) {
       if (!heroVisible || document.hidden) {
         requestAnimationFrame(render);
         return;
       }
+      if (nowMs - lastSurfaceDraw < 22) {
+        requestAnimationFrame(render);
+        return;
+      }
+      lastSurfaceDraw = nowMs;
       resize();
       const now = nowMs / 1000;
       points = points.filter((point) => now - point.born < 2.8);
@@ -451,28 +463,44 @@
       precision highp float;
       varying vec2 v_uv;
       uniform sampler2D u_texture;
+      uniform sampler2D u_flowmap;
       uniform vec2 u_mouse;
-      uniform vec2 u_velocity;
-      uniform float u_time;
       uniform float u_mouseActive;
       void main(){
-        vec2 difference=v_uv-u_mouse;
-        difference.x*=3.4;
-        float distanceToMouse=length(difference);
-        float influence=smoothstep(.34,0.,distanceToMouse)*u_mouseActive;
-        vec2 direction=distanceToMouse>.0001?normalize(difference):vec2(0.);
-        direction.x/=3.4;
-        float wave=sin(distanceToMouse*34.-u_time*4.2);
-        vec2 displacedUv=v_uv-u_velocity*influence*.62+direction*wave*influence*.010;
+        vec4 flowSample=texture2D(u_flowmap,v_uv);
+        vec2 flow=(flowSample.rg*2.-1.)*flowSample.b;
+        float flowStrength=flowSample.b;
+        vec2 flowCurl=vec2(-flow.y,flow.x)*flowStrength*.010;
+        vec2 displacedUv=v_uv-flow*vec2(.070,.094)+flowCurl;
         vec4 surface=texture2D(u_texture,clamp(displacedUv,0.,1.));
-        float a1=texture2D(u_texture,clamp(displacedUv+vec2(-.0024,0.),0.,1.)).a;
-        float a2=texture2D(u_texture,clamp(displacedUv+vec2(.0024,0.),0.,1.)).a;
-        float a3=texture2D(u_texture,clamp(displacedUv+vec2(0.,.006),0.,1.)).a;
-        float edge=clamp(surface.a-min(min(a1,a2),a3),0.,1.);
-        float lamp=exp(-distanceToMouse*distanceToMouse*18.)*u_mouseActive;
-        float gloss=pow(max(0.,1.-distanceToMouse*2.2),3.)*u_mouseActive;
-        vec3 color=surface.rgb+vec3(.40,.55,.92)*lamp*.22+vec3(1.)*gloss*.38+vec3(.78,.88,1.)*edge*.78;
-        gl_FragColor=vec4(color,clamp(surface.a*.76+edge*.18,0.,.92));
+        vec2 texel=vec2(.0018,.0055);
+        vec3 sampleLeft=texture2D(u_texture,clamp(displacedUv-vec2(texel.x,0.),0.,1.)).rgb;
+        vec3 sampleRight=texture2D(u_texture,clamp(displacedUv+vec2(texel.x,0.),0.,1.)).rgb;
+        vec3 sampleTop=texture2D(u_texture,clamp(displacedUv+vec2(0.,texel.y),0.,1.)).rgb;
+        vec3 sampleBottom=texture2D(u_texture,clamp(displacedUv-vec2(0.,texel.y),0.,1.)).rgb;
+        float leftLight=dot(sampleLeft,vec3(.2126,.7152,.0722));
+        float rightLight=dot(sampleRight,vec3(.2126,.7152,.0722));
+        float topLight=dot(sampleTop,vec3(.2126,.7152,.0722));
+        float bottomLight=dot(sampleBottom,vec3(.2126,.7152,.0722));
+        vec3 normal=normalize(vec3(
+          (leftLight-rightLight)*4.2,
+          (bottomLight-topLight)*4.2,
+          1.
+        ));
+        vec2 localMouse=normalize((u_mouse-displacedUv)+vec2(.0001));
+        vec3 lightDirection=normalize(vec3(localMouse,.72));
+        float movingHighlight=pow(max(dot(normal,lightDirection),0.),7.)*flowStrength*u_mouseActive;
+        float flowLength=length(flow);
+        vec2 flowDirection=flow/ max(flowLength,.001);
+        float trailRim=pow(max(dot(normal.xy,-flowDirection),0.),2.4)*flowStrength;
+        float trailShade=pow(max(dot(normal.xy,flowDirection),0.),2.)*flowStrength;
+        vec3 color=pow(max(surface.rgb,vec3(0.)),vec3(.78));
+        color*=vec3(1.10,1.16,1.28);
+        color+=vec3(.68,.82,1.)*movingHighlight*.30;
+        color+=vec3(.42,.62,1.)*trailRim*.20;
+        color*=1.-trailShade*.025;
+        color*=1.+flowStrength*.045;
+        gl_FragColor=vec4(color,surface.a*.94);
       }
     `;
     function compileWordShader(type,source){
@@ -498,17 +526,29 @@
     wordGl.vertexAttribPointer(position,2,wordGl.FLOAT,false,0,0);
     const uniforms={
       texture:wordGl.getUniformLocation(program,"u_texture"),
+      flowmap:wordGl.getUniformLocation(program,"u_flowmap"),
       mouse:wordGl.getUniformLocation(program,"u_mouse"),
-      velocity:wordGl.getUniformLocation(program,"u_velocity"),
-      time:wordGl.getUniformLocation(program,"u_time"),
       mouseActive:wordGl.getUniformLocation(program,"u_mouseActive"),
     };
     const texture=wordGl.createTexture();
+    wordGl.activeTexture(wordGl.TEXTURE0);
     wordGl.bindTexture(wordGl.TEXTURE_2D,texture);
     wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_WRAP_S,wordGl.CLAMP_TO_EDGE);
     wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_WRAP_T,wordGl.CLAMP_TO_EDGE);
     wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_MIN_FILTER,wordGl.LINEAR);
     wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_MAG_FILTER,wordGl.LINEAR);
+    const flowTexture=wordGl.createTexture();
+    const flowWidth=64;
+    const flowHeight=24;
+    const flowField=new Float32Array(flowWidth*flowHeight*3);
+    const flowPixels=new Uint8Array(flowWidth*flowHeight*4);
+    wordGl.activeTexture(wordGl.TEXTURE1);
+    wordGl.bindTexture(wordGl.TEXTURE_2D,flowTexture);
+    wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_WRAP_S,wordGl.CLAMP_TO_EDGE);
+    wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_WRAP_T,wordGl.CLAMP_TO_EDGE);
+    wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_MIN_FILTER,wordGl.LINEAR);
+    wordGl.texParameteri(wordGl.TEXTURE_2D,wordGl.TEXTURE_MAG_FILTER,wordGl.LINEAR);
+    wordGl.texImage2D(wordGl.TEXTURE_2D,0,wordGl.RGBA,flowWidth,flowHeight,0,wordGl.RGBA,wordGl.UNSIGNED_BYTE,flowPixels);
     wordGl.enable(wordGl.BLEND);
     wordGl.blendFunc(wordGl.SRC_ALPHA,wordGl.ONE_MINUS_SRC_ALPHA);
     const wordImage = new Image();
@@ -524,11 +564,57 @@
     let previousPointerY=.62;
     let mouseActive=0;
     let wordReady = false;
+    let wordFrame=0;
+    let lastWordInteraction=0;
+    let lastWordDraw=0;
+    let flowEnergy=0;
+
+    function splatFlow(x,y,vx,vy){
+      const radius=.17;
+      for(let row=0;row<flowHeight;row++){
+        const py=row/(flowHeight-1);
+        for(let col=0;col<flowWidth;col++){
+          const px=col/(flowWidth-1);
+          const dx=(px-x)*3.4;
+          const dy=py-y;
+          const distanceSquared=dx*dx+dy*dy;
+          if(distanceSquared>radius*radius)continue;
+          const weight=Math.exp(-distanceSquared/(radius*radius)*3.2);
+          const index=(row*flowWidth+col)*3;
+          flowField[index]=Math.max(-1,Math.min(1,flowField[index]+vx*weight));
+          flowField[index+1]=Math.max(-1,Math.min(1,flowField[index+1]+vy*weight));
+          flowField[index+2]=Math.max(flowField[index+2],weight);
+        }
+      }
+      flowEnergy=1;
+    }
+
+    function updateFlowmap(deltaSeconds){
+      const velocityDecay=Math.pow(.915,deltaSeconds*60);
+      const strengthDecay=Math.pow(.955,deltaSeconds*60);
+      let strongest=0;
+      for(let index=0,pixel=0;index<flowField.length;index+=3,pixel+=4){
+        flowField[index]*=velocityDecay;
+        flowField[index+1]*=velocityDecay;
+        flowField[index+2]*=strengthDecay;
+        strongest=Math.max(strongest,flowField[index+2]);
+        flowPixels[pixel]=Math.round((flowField[index]*.5+.5)*255);
+        flowPixels[pixel+1]=Math.round((flowField[index+1]*.5+.5)*255);
+        flowPixels[pixel+2]=Math.round(flowField[index+2]*255);
+        flowPixels[pixel+3]=255;
+      }
+      flowEnergy=strongest;
+      wordGl.activeTexture(wordGl.TEXTURE1);
+      wordGl.bindTexture(wordGl.TEXTURE_2D,flowTexture);
+      wordGl.pixelStorei(wordGl.UNPACK_FLIP_Y_WEBGL,false);
+      wordGl.texSubImage2D(wordGl.TEXTURE_2D,0,0,0,flowWidth,flowHeight,wordGl.RGBA,wordGl.UNSIGNED_BYTE,flowPixels);
+    }
 
     function resizeWordCanvas() {
       const rect = wordCenter.getBoundingClientRect();
-      const width = Math.max(1, Math.round(rect.width));
-      const height = Math.max(1, Math.round(rect.height));
+      const renderScale=Math.min(window.devicePixelRatio||1,1.35);
+      const width = Math.max(1, Math.round(rect.width*renderScale));
+      const height = Math.max(1, Math.round(rect.height*renderScale));
       if (wordCanvas.width !== width || wordCanvas.height !== height) {
         wordCanvas.width = width;
         wordCanvas.height = height;
@@ -545,6 +631,10 @@
       previousPointerX=targetLightX;
       previousPointerY=targetLightY;
       mouseActive=1;
+      const now=performance.now();
+      splatFlow(targetLightX,targetLightY,targetVelocityX*24,targetVelocityY*24);
+      lastWordInteraction=now;
+      if(!wordFrame&&wordReady)wordFrame=requestAnimationFrame(drawWordGlass);
     }
 
     hero.addEventListener("pointermove", updateWordLight);
@@ -552,15 +642,23 @@
       targetLightX = 0.5;
       targetLightY = 0.62;
       mouseActive=0;
+      lastWordInteraction=performance.now();
+      if(!wordFrame&&wordReady)wordFrame=requestAnimationFrame(drawWordGlass);
     });
     window.addEventListener("resize", resizeWordCanvas);
 
     function drawWordGlass(nowMs) {
-      requestAnimationFrame(drawWordGlass);
+      wordFrame=0;
       if (!wordReady || !heroVisible || document.hidden) return;
+      if(nowMs-lastWordDraw<16){
+        wordFrame=requestAnimationFrame(drawWordGlass);
+        return;
+      }
+      const deltaSeconds=Math.min(.034,Math.max(.001,(nowMs-lastWordDraw)/1000));
+      lastWordDraw=nowMs;
       resizeWordCanvas();
-      lightX+=(targetLightX-lightX)*.065;
-      lightY+=(targetLightY-lightY)*.065;
+      lightX+=(targetLightX-lightX)*.32;
+      lightY+=(targetLightY-lightY)*.32;
       velocityX+=(targetVelocityX-velocityX)*.12;
       velocityY+=(targetVelocityY-velocityY)*.12;
       targetVelocityX*=.72;
@@ -569,27 +667,29 @@
       velocityY*=.92;
       wordGl.clearColor(0,0,0,0);
       wordGl.clear(wordGl.COLOR_BUFFER_BIT);
+      updateFlowmap(deltaSeconds);
+      wordGl.activeTexture(wordGl.TEXTURE0);
+      wordGl.bindTexture(wordGl.TEXTURE_2D,texture);
       wordGl.uniform2f(uniforms.mouse,lightX,lightY);
-      wordGl.uniform2f(uniforms.velocity,velocityX,velocityY);
-      wordGl.uniform1f(uniforms.time,nowMs/1000);
       wordGl.uniform1f(uniforms.mouseActive,mouseActive);
       wordGl.drawArrays(wordGl.TRIANGLES,0,6);
+      const moving=Math.abs(targetLightX-lightX)+Math.abs(targetLightY-lightY)+Math.abs(velocityX)+Math.abs(velocityY)>.0015;
+      if(nowMs-lastWordInteraction<1200||moving||flowEnergy>.012)wordFrame=requestAnimationFrame(drawWordGlass);
     }
 
     wordImage.addEventListener("load", () => {
-      const croppedWord=document.createElement("canvas");
-      croppedWord.width=1577;
-      croppedWord.height=463;
-      croppedWord.getContext("2d").drawImage(wordImage,252,372,1978,581,0,0,1577,463);
+      wordGl.activeTexture(wordGl.TEXTURE0);
       wordGl.bindTexture(wordGl.TEXTURE_2D,texture);
       wordGl.pixelStorei(wordGl.UNPACK_FLIP_Y_WEBGL,true);
-      wordGl.texImage2D(wordGl.TEXTURE_2D,0,wordGl.RGBA,wordGl.RGBA,wordGl.UNSIGNED_BYTE,croppedWord);
+      wordGl.texImage2D(wordGl.TEXTURE_2D,0,wordGl.RGBA,wordGl.RGBA,wordGl.UNSIGNED_BYTE,wordImage);
       wordGl.uniform1i(uniforms.texture,0);
+      wordGl.uniform1i(uniforms.flowmap,1);
       wordReady = true;
       wordCenter.classList.add("word-canvas-ready");
+      lastWordInteraction=performance.now();
+      wordFrame=requestAnimationFrame(drawWordGlass);
     }, { once: true });
-    wordImage.src = "./public/assets/hero-word-figma-exact.png";
-    requestAnimationFrame(drawWordGlass);
+    wordImage.src = "./public/assets/aqua-logo.png";
   }
 
   initHeroWordGlass();
