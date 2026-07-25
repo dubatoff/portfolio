@@ -399,7 +399,7 @@ img {
   z-index: 89;
   box-sizing: border-box;
   color: #e3e3db;
-  background: #121312;
+  background: transparent;
   font-size: clamp(13px, 1.12vw, 22px);
   line-height: 1;
   letter-spacing: .08em;
