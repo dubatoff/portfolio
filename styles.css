@@ -1380,6 +1380,45 @@ img {
 }
 .screen-card:hover .screen-card__main { opacity: 0; }
 .screen-card:hover .screen-card__placeholder { opacity: 1; transform: scale(1); }
+.screen-card--music-player .work-card__paper,
+.screen-card--music-a .work-card__paper,
+.screen-card--music-b .work-card__paper {
+  background: #d9d4ce;
+}
+.screen-card--music-player .screen-card__placeholder,
+.screen-card--music-a .screen-card__placeholder,
+.screen-card--music-b .screen-card__placeholder {
+  clip-path: inset(5% 0 0);
+}
+.screen-card__music-label {
+  position: absolute;
+  top: 1px;
+  right: 3.3%;
+  z-index: 5;
+  display: flex;
+  width: 23.4%;
+  height: 2.4%;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  color: #121312;
+  background: #c0fe04;
+  font: clamp(6px, .62vw, 12px)/1 "DOSFont", monospace;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .16s ease;
+}
+.screen-card--music-a .screen-card__music-label,
+.screen-card--music-b .screen-card__music-label {
+  right: 4.1%;
+  width: 30.2%;
+  height: 4.1%;
+  font-size: clamp(5px, .5vw, 9px);
+}
+.screen-card:hover .screen-card__music-label {
+  opacity: 1;
+}
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
