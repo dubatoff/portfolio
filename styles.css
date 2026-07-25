@@ -1352,6 +1352,50 @@ img {
   inset: 0;
   content: "";
   pointer-events: none;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(33.14815% - 10px),
+      transparent calc(33.14815% - 10px),
+      transparent calc(33.14815% - 5px),
+      #000 calc(33.14815% - 5px),
+      #000 calc(33.14815% + 5px),
+      transparent calc(33.14815% + 5px),
+      transparent calc(33.14815% + 10px),
+      #000 calc(33.14815% + 10px),
+      #000 calc(67.96296% - 10px),
+      transparent calc(67.96296% - 10px),
+      transparent calc(67.96296% - 5px),
+      #000 calc(67.96296% - 5px),
+      #000 calc(67.96296% + 5px),
+      transparent calc(67.96296% + 5px),
+      transparent calc(67.96296% + 10px),
+      #000 calc(67.96296% + 10px),
+      #000 100%
+    );
+  mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(33.14815% - 10px),
+      transparent calc(33.14815% - 10px),
+      transparent calc(33.14815% - 5px),
+      #000 calc(33.14815% - 5px),
+      #000 calc(33.14815% + 5px),
+      transparent calc(33.14815% + 5px),
+      transparent calc(33.14815% + 10px),
+      #000 calc(33.14815% + 10px),
+      #000 calc(67.96296% - 10px),
+      transparent calc(67.96296% - 10px),
+      transparent calc(67.96296% - 5px),
+      #000 calc(67.96296% - 5px),
+      #000 calc(67.96296% + 5px),
+      transparent calc(67.96296% + 5px),
+      transparent calc(67.96296% + 10px),
+      #000 calc(67.96296% + 10px),
+      #000 100%
+    );
   background:
     linear-gradient(
       90deg,
