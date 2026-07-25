@@ -1415,7 +1415,7 @@ img {
   padding-top: .08em;
   color: #121312;
   background: #c0fe04;
-  font: clamp(12px, 1.4vw, 27px)/1 "DOSFont", monospace;
+  font: clamp(10px, 1.15vw, 22px)/1 "DOSFont", monospace;
   text-indent: .12em;
   white-space: nowrap;
   opacity: 0;
