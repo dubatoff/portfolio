@@ -10,6 +10,7 @@
   const fixedMark = document.getElementById("fixedMark");
   const contact = document.getElementById("contact");
   const about = document.getElementById("about");
+  const aboutSignature = about?.querySelector(".about__signature");
   const hero = document.getElementById("main");
   const qaMode = new URLSearchParams(window.location.search).has("qa");
   let heroVisible = true;
@@ -775,28 +776,38 @@
 
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      const isAboutSignature = entry.target.classList.contains("about__signature");
-
-      if (isAboutSignature) {
-        if (entry.isIntersecting) {
-          entry.target.classList.remove("is-visible", "is-written");
-          void entry.target.offsetWidth;
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible", "is-written");
-          delete entry.target.dataset.written;
-        }
-        return;
-      }
-
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
       }
     });
   }, { threshold: 0.12, rootMargin: "0px 0px -8%" });
 
-  document.querySelectorAll(".work-card, .about__portrait, .about__copy, .about__signature")
+  document.querySelectorAll(".work-card, .about__portrait, .about__copy")
     .forEach((element) => revealObserver.observe(element));
+
+  if (about && aboutSignature) {
+    let signatureReadyToReplay = true;
+
+    const updateAboutSignature = () => {
+      const rect = about.getBoundingClientRect();
+      const fillsViewport = rect.top <= 1 && rect.bottom >= innerHeight - 1;
+      const isFarFromViewport = rect.top > innerHeight * 0.55 || rect.bottom < innerHeight * 0.45;
+
+      if (fillsViewport && signatureReadyToReplay) {
+        aboutSignature.classList.remove("is-visible", "is-written");
+        void aboutSignature.offsetWidth;
+        aboutSignature.classList.add("is-visible");
+        signatureReadyToReplay = false;
+      } else if (isFarFromViewport) {
+        aboutSignature.classList.remove("is-visible", "is-written");
+        signatureReadyToReplay = true;
+      }
+    };
+
+    window.addEventListener("scroll", updateAboutSignature, { passive: true });
+    window.addEventListener("resize", updateAboutSignature);
+    updateAboutSignature();
+  }
 
   document.querySelectorAll("[data-tilt]").forEach((card) => {
     const paper = card.querySelector(".work-card__paper");
@@ -871,37 +882,50 @@
   }
   interactionFrame = requestAnimationFrame(animateInteractions);
 
+  const portfolioLiveStatuses = [...document.querySelectorAll(".portfolio-screen")].map((screen) => {
+    const status = document.createElement("span");
+    status.className = "portfolio-live-status pixel";
+    status.setAttribute("aria-label", "Московское время и температура");
+    screen.append(status);
+    return status;
+  });
+
   function updateClock() {
     const clock = document.getElementById("clock");
-    if (!clock) return;
     const parts = new Intl.DateTimeFormat("ru-RU", {
       timeZone: "Europe/Moscow",
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
     }).format(new Date());
-    const temperature = document.documentElement.dataset.temperature || "27";
-    clock.textContent = `GMT+3 MSK ${parts} ${temperature}°C`;
+    const temperature = document.documentElement.dataset.temperature || "--";
+    const statusText = `GMT+3 MSK ${parts} ${temperature}°C`;
+    if (clock) clock.textContent = statusText;
+    portfolioLiveStatuses.forEach((status) => {
+      status.textContent = statusText;
+    });
   }
 
   updateClock();
   window.setInterval(updateClock, 15000);
 
-  fetch("https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current=temperature_2m&timezone=Europe%2FMoscow")
-    .then((response) => {
+  async function updateMoscowWeather() {
+    try {
+      const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=55.7558&longitude=37.6173&current=temperature_2m&timezone=Europe%2FMoscow");
       if (!response.ok) throw new Error("Weather unavailable");
-      return response.json();
-    })
-    .then((data) => {
+      const data = await response.json();
       const value = Math.round(data?.current?.temperature_2m);
       if (Number.isFinite(value)) {
         document.documentElement.dataset.temperature = String(value);
         updateClock();
       }
-    })
-    .catch(() => {
-      document.documentElement.dataset.temperature = "27";
-    });
+    } catch {
+      updateClock();
+    }
+  }
+
+  updateMoscowWeather();
+  window.setInterval(updateMoscowWeather, 10 * 60 * 1000);
 
   const canvas = document.getElementById("fireworks");
   const context = canvas.getContext("2d");

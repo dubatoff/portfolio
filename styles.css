@@ -1342,6 +1342,22 @@ img {
   pointer-events: none;
   user-select: none;
 }
+.portfolio-live-status {
+  position: absolute;
+  z-index: 4;
+  left: 3.65%;
+  bottom: 5.7%;
+  min-width: 18%;
+  box-sizing: border-box;
+  padding: .18em .7em .12em 0;
+  color: #e3e3db;
+  background: #121312;
+  font-size: clamp(12px, 1.05vw, 20px);
+  line-height: 1;
+  letter-spacing: .08em;
+  white-space: nowrap;
+  pointer-events: none;
+}
 .screen-card {
   position: absolute;
   z-index: 3;
@@ -1592,7 +1608,7 @@ img {
   transform-origin: left top;
   clip-path: inset(0 100% 0 0);
 }
-.about__signature.is-visible img { animation: signature-real 2.15s var(--ease-out) forwards; }
+.about__signature.is-visible img { animation: signature-real 3.2s var(--ease-out) forwards; }
 @keyframes signature-real { to { clip-path: inset(0 0 0 0); } }
 .about__signature-draw { display: none !important; }
 .about__stack-label {
