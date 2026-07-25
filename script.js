@@ -8,6 +8,7 @@
   const loaderLine = document.getElementById("loaderLine");
   const loaderPercent = document.getElementById("loaderPercent");
   const fixedMark = document.getElementById("fixedMark");
+  const fixedLiveStatus = document.getElementById("fixedLiveStatus");
   const contact = document.getElementById("contact");
   const about = document.getElementById("about");
   const aboutSignature = about?.querySelector(".about__signature");
@@ -882,14 +883,6 @@
   }
   interactionFrame = requestAnimationFrame(animateInteractions);
 
-  const portfolioLiveStatuses = [...document.querySelectorAll(".portfolio-screen")].map((screen) => {
-    const status = document.createElement("span");
-    status.className = "portfolio-live-status pixel";
-    status.setAttribute("aria-label", "Московское время и температура");
-    screen.append(status);
-    return status;
-  });
-
   function updateClock() {
     const clock = document.getElementById("clock");
     const parts = new Intl.DateTimeFormat("ru-RU", {
@@ -901,9 +894,7 @@
     const temperature = document.documentElement.dataset.temperature || "--";
     const statusText = `GMT+3 MSK ${parts} ${temperature}°C`;
     if (clock) clock.textContent = statusText;
-    portfolioLiveStatuses.forEach((status) => {
-      status.textContent = statusText;
-    });
+    if (fixedLiveStatus) fixedLiveStatus.textContent = statusText;
   }
 
   updateClock();
@@ -1020,14 +1011,24 @@
     contact.classList.toggle("show-contact", progress >= cursorEnd + (reduceMotion ? 0 : 0.035));
   }
 
+  function updateFixedMetaVisibility() {
+    const aboutRect = about.getBoundingClientRect();
+    body.classList.toggle("show-fixed-meta", aboutRect.top <= 1);
+  }
+
   window.addEventListener("scroll", () => {
     const rect = about.getBoundingClientRect();
     const progress = Math.max(0, Math.min(1, (innerHeight - rect.top) / innerHeight));
     const radius = (1 - progress) * 54;
     about.style.borderRadius = `${radius}px ${radius}px 0 0`;
     fixedMark.classList.toggle("is-dark-scene", window.scrollY >= innerHeight * 0.62);
+    updateFixedMetaVisibility();
     updateContactSequence();
   }, { passive: true });
-  window.addEventListener("resize", updateContactSequence);
+  window.addEventListener("resize", () => {
+    updateFixedMetaVisibility();
+    updateContactSequence();
+  });
+  updateFixedMetaVisibility();
   updateContactSequence();
 })();

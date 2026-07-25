@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=12" />
+    <link rel="stylesheet" href="./styles.css?v=13" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -29,6 +29,8 @@
     <div class="cursor-trail" id="cursorTrail" aria-hidden="true"></div>
 
     <img class="fixed-mark" id="fixedMark" src="./public/assets/persistent-logo.svg?v=2" alt="Dubatoff" />
+    <span class="fixed-live-status pixel" id="fixedLiveStatus" aria-label="Московское время и температура">GMT+3 MSK --:-- --°C</span>
+    <span class="fixed-coords pixel" id="fixedCoords">1702 X 1510 Y</span>
 
     <main>
       <section class="hero" id="main" aria-label="Главный экран">
@@ -204,6 +206,6 @@
       </section>
     </main>
 
-    <script src="./script.js?v=12"></script>
+    <script src="./script.js?v=13"></script>
   </body>
 </html>

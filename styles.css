@@ -393,6 +393,39 @@ img {
   transition: opacity 0.5s ease, transform 0.7s var(--ease-out);
   filter: none;
 }
+.fixed-live-status,
+.fixed-coords {
+  position: fixed;
+  z-index: 89;
+  box-sizing: border-box;
+  color: #e3e3db;
+  background: #121312;
+  font-size: clamp(13px, 1.12vw, 22px);
+  line-height: 1;
+  letter-spacing: .08em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .16s ease;
+}
+.fixed-live-status {
+  bottom: 6.6%;
+  left: 3.65%;
+  min-width: 20%;
+  padding: .2em .8em .15em 0;
+}
+.fixed-coords {
+  bottom: 4.75%;
+  left: 50%;
+  min-width: 16%;
+  padding: .2em .6em .15em;
+  text-align: center;
+  transform: translateX(-50%);
+}
+.show-fixed-meta .fixed-live-status,
+.show-fixed-meta .fixed-coords {
+  opacity: 1;
+}
 
 .hero {
   position: relative;
@@ -810,7 +843,7 @@ img {
   gap: clamp(12px, 1.4vw, 26px);
 }
 
-.about__footer > span:last-child { text-align: right; }
+.about__footer > span:last-child { visibility: hidden; text-align: right; }
 
 .works {
   z-index: 3;
@@ -1342,22 +1375,6 @@ img {
   pointer-events: none;
   user-select: none;
 }
-.portfolio-live-status {
-  position: absolute;
-  z-index: 4;
-  left: 3.65%;
-  bottom: 5.7%;
-  min-width: 18%;
-  box-sizing: border-box;
-  padding: .18em .7em .12em 0;
-  color: #e3e3db;
-  background: #121312;
-  font-size: clamp(12px, 1.05vw, 20px);
-  line-height: 1;
-  letter-spacing: .08em;
-  white-space: nowrap;
-  pointer-events: none;
-}
 .screen-card {
   position: absolute;
   z-index: 3;
@@ -1495,8 +1512,8 @@ img {
   font-size: clamp(15px, 1.2vw, 23px);
 }
 .contact__chrome nav .is-active { color: var(--acid); }
-.contact__clock { position: absolute; bottom: 6.6%; left: 3.65%; font-size: clamp(13px, 1.12vw, 22px); }
-.contact__coords { position: absolute; bottom: 4.75%; left: 50%; font-size: clamp(13px, 1.12vw, 22px); transform: translateX(-50%); }
+.contact__clock,
+.contact__coords { display: none; }
 
 @media (max-width: 760px) {
   .portfolio-screen { aspect-ratio: 9 / 16; min-height: 100svh; }
