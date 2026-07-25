@@ -1405,7 +1405,7 @@ img {
   position: absolute;
   top: 0;
   right: 3.16%;
-  z-index: 5;
+  z-index: 6;
   display: flex;
   width: 16.57%;
   height: 4.55%;
@@ -1415,7 +1415,6 @@ img {
   padding-top: .08em;
   color: #121312;
   background: #c0fe04;
-  box-shadow: 0 0 0 .38em #d9d4ce;
   font: clamp(10px, 1.15vw, 22px)/1 "DOSFont", monospace;
   text-indent: .12em;
   white-space: nowrap;
@@ -1423,7 +1422,20 @@ img {
   pointer-events: none;
   transition: opacity .16s ease;
 }
-.screen-card:hover .screen-card__akkon-label { opacity: 1; }
+.screen-card__akkon-label-mask {
+  position: absolute;
+  top: 0;
+  right: 2.7%;
+  z-index: 5;
+  width: 17.4%;
+  height: 5.4%;
+  background: #d9d4ce;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .16s ease;
+}
+.screen-card:hover .screen-card__akkon-label,
+.screen-card:hover .screen-card__akkon-label-mask { opacity: 1; }
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
