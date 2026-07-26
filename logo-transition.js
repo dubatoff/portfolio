@@ -23,7 +23,7 @@ if (section && canvas && portal && contact) {
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(1.15, window.devicePixelRatio || 1));
+  renderer.setPixelRatio(Math.min(1, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.18;
@@ -68,14 +68,14 @@ if (section && canvas && portal && contact) {
   let transitionVisible = false;
   let modelFrameDirty = true;
   let lastWebGLRender = 0;
-  const webGLFrameInterval = 1000 / 45;
+  const webGLFrameInterval = 1000 / 60;
   const pointerTarget = new THREE.Vector2();
   const pointerCurrent = new THREE.Vector2();
 
   function resizeRenderer() {
     const width = Math.max(1, canvas.clientWidth);
     const height = Math.max(1, canvas.clientHeight);
-    renderer.setPixelRatio(Math.min(1.15, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(1, window.devicePixelRatio || 1));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -117,7 +117,7 @@ if (section && canvas && portal && contact) {
     const canvasFade = 1 - smoothstep(0.84, 0.89, progress);
     canvas.style.opacity = String(canvasFade);
 
-    const contentPhase = smoothstep(0.955, 0.985, progress);
+    const contentPhase = scrollProgress >= 0.95 ? smoothstep(0.955, 0.985, progress) : 0;
     if (contactContent) {
       contactContent.style.opacity = String(contentPhase);
       contactContent.style.transform = `translateY(${(1 - contentPhase) * 44}px) scale(${0.985 + contentPhase * 0.015})`;
@@ -125,16 +125,21 @@ if (section && canvas && portal && contact) {
     }
     contact.classList.toggle("show-contact", contentPhase > 0.01);
 
-    if (progress >= 0.905 && !finaleLaunched) {
+    if (scrollProgress >= 0.92 && progress >= 0.905 && !finaleLaunched) {
       finaleLaunched = true;
       launchFinale();
-    } else if (progress < 0.82 && finaleLaunched) {
+    } else if ((scrollProgress < 0.86 || progress < 0.82) && finaleLaunched) {
       finaleLaunched = false;
       ambientFireworksStarted = false;
       fireworksActive = false;
       particles.length = 0;
     }
-    if (progress >= 0.955 && finaleLaunched && !ambientFireworksStarted) {
+    if (
+      scrollProgress >= 0.95 &&
+      progress >= 0.955 &&
+      finaleLaunched &&
+      !ambientFireworksStarted
+    ) {
       ambientFireworksStarted = true;
       fireworksStopAt = performance.now() + 4400;
       createBurst(0.95);
@@ -178,13 +183,16 @@ if (section && canvas && portal && contact) {
       baseScale = 2.15 / Math.max(0.001, size.x);
 
       modelReady = true;
+      scrollProgress = transitionTrigger.progress;
+      renderedProgress = scrollProgress;
+      applyProgress(renderedProgress);
+      renderer.compile(scene, camera);
+      renderer.render(scene, camera);
       modelFrameDirty = true;
       section.classList.add("is-model-ready");
       ScrollTrigger.refresh();
       alignContactAnchor();
       ScrollTrigger.update();
-      scrollProgress = transitionTrigger.progress;
-      renderedProgress = scrollProgress;
       applyProgress(scrollProgress);
     },
     (event) => {
@@ -215,8 +223,8 @@ if (section && canvas && portal && contact) {
     }
     const progressDelta = Math.abs(scrollProgress - renderedProgress);
     const pointerDelta = pointerCurrent.distanceTo(pointerTarget);
-    renderedProgress += (scrollProgress - renderedProgress) * (reduceMotion ? 1 : 0.075);
-    pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.075);
+    renderedProgress = scrollProgress;
+    pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.12);
     parallaxRoot.rotation.x = pointerCurrent.y * -0.11;
     parallaxRoot.rotation.y = pointerCurrent.x * 0.15;
     parallaxRoot.position.x = pointerCurrent.x * 0.12;

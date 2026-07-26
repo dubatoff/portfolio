@@ -1907,7 +1907,7 @@ img {
 .logo-transition {
   position: relative;
   z-index: 4;
-  height: 360svh;
+  height: 420svh;
   overflow: clip;
   background: #121312;
 }
@@ -2092,7 +2092,7 @@ img {
 .contact__cursor-3d { display: none !important; }
 
 @media (max-width: 760px) {
-  .logo-transition { height: 300svh; }
+  .logo-transition { height: 360svh; }
   .logo-transition__chrome > a { top: 24px; left: 18px; font-size: 10px; }
   .logo-transition__chrome nav { top: 24px; right: 18px; gap: 12px; font-size: 10px; }
   .contact { min-height: 100svh; }
