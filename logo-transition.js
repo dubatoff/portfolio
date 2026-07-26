@@ -100,7 +100,7 @@ if (section && canvas && portal && contact) {
     if (!modelReady || !model) return;
 
     const rotationPhase = smoothstep(0.02, 0.62, progress);
-    const approachPhase = smoothstep(0.38, 0.8, progress);
+    const approachPhase = smoothstep(0.38, 0.76, progress);
     const finalRush = Math.pow(approachPhase, 2.25);
     const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 3.8;
 
@@ -110,14 +110,14 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
 
-    const darkScreenPhase = smoothstep(0.76, 0.84, progress);
+    const darkScreenPhase = smoothstep(0.84, 0.9, progress);
     portal.style.opacity = String(darkScreenPhase);
     section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    const canvasFade = 1 - smoothstep(0.8, 0.86, scrollProgress);
+    const canvasFade = 1 - smoothstep(0.84, 0.89, progress);
     canvas.style.opacity = String(canvasFade);
 
-    const contentPhase = smoothstep(0.93, 0.97, progress);
+    const contentPhase = smoothstep(0.955, 0.985, progress);
     if (contactContent) {
       contactContent.style.opacity = String(contentPhase);
       contactContent.style.transform = `translateY(${(1 - contentPhase) * 44}px) scale(${0.985 + contentPhase * 0.015})`;
@@ -125,16 +125,16 @@ if (section && canvas && portal && contact) {
     }
     contact.classList.toggle("show-contact", contentPhase > 0.01);
 
-    if (progress >= 0.875 && !finaleLaunched) {
+    if (progress >= 0.905 && !finaleLaunched) {
       finaleLaunched = true;
       launchFinale();
-    } else if (progress < 0.8 && finaleLaunched) {
+    } else if (progress < 0.82 && finaleLaunched) {
       finaleLaunched = false;
       ambientFireworksStarted = false;
       fireworksActive = false;
       particles.length = 0;
     }
-    if (progress >= 0.93 && finaleLaunched && !ambientFireworksStarted) {
+    if (progress >= 0.955 && finaleLaunched && !ambientFireworksStarted) {
       ambientFireworksStarted = true;
       fireworksStopAt = performance.now() + 4400;
       createBurst(0.95);
@@ -142,7 +142,7 @@ if (section && canvas && portal && contact) {
     }
     fireworksActive =
       ambientFireworksStarted &&
-      progress >= 0.93 &&
+      progress >= 0.955 &&
       progress < 0.995 &&
       performance.now() < fireworksStopAt;
   }
@@ -222,7 +222,7 @@ if (section && canvas && portal && contact) {
     parallaxRoot.position.x = pointerCurrent.x * 0.12;
     parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
-    const modelIsVisible = scrollProgress < 0.865 && renderedProgress < 0.9;
+    const modelIsVisible = renderedProgress < 0.9;
     const modelIsMoving = progressDelta > 0.00025 || pointerDelta > 0.00025;
     if (
       modelIsVisible &&
