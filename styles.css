@@ -2042,12 +2042,6 @@ img {
   min-height: 0;
   overflow: hidden;
   background: transparent;
-  cursor: url("./public/assets/pixel-cursor.svg") 3 2, pointer;
-}
-
-.logo-transition__contact a,
-.logo-transition__contact button {
-  cursor: url("./public/assets/pixel-cursor.svg") 3 2, pointer;
 }
 
 .logo-transition__contact-anchor {

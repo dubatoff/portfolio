@@ -18,7 +18,6 @@
   let heroVisible = true;
 
   body.classList.add("is-loading");
-  body.classList.add("native-cursor");
 
   function runLoader() {
     const start = performance.now();
@@ -730,11 +729,11 @@
     requestAnimationFrame(animateCursor);
   }
 
-  if (finePointer && !body.classList.contains("native-cursor")) {
+  if (finePointer) {
     window.addEventListener("pointermove", (event) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
-      if (!body.classList.contains("native-cursor") && performance.now() - lastPointerPixel > 34) {
+      if (performance.now() - lastPointerPixel > 34) {
         lastPointerPixel = performance.now();
         createTrailPixel(event.clientX, event.clientY);
       }
@@ -769,9 +768,7 @@
 
   const heroCursorObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      const heroIsActive = entry.isIntersecting && entry.intersectionRatio > 0.42;
       heroVisible = entry.isIntersecting;
-      body.classList.toggle("native-cursor", heroIsActive);
     });
   }, { threshold: [0, 0.42, 0.75] });
   heroCursorObserver.observe(hero);
