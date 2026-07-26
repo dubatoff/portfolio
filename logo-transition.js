@@ -23,7 +23,7 @@ if (section && canvas && portal && contact) {
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(1.6, window.devicePixelRatio || 1));
+  renderer.setPixelRatio(Math.min(1.35, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.18;
@@ -63,14 +63,16 @@ if (section && canvas && portal && contact) {
   let modelReady = false;
   let fireworksActive = false;
   let finaleLaunched = false;
+  let ambientFireworksStarted = false;
   let fireworksStopAt = 0;
+  let transitionVisible = false;
   const pointerTarget = new THREE.Vector2();
   const pointerCurrent = new THREE.Vector2();
 
   function resizeRenderer() {
     const width = Math.max(1, canvas.clientWidth);
     const height = Math.max(1, canvas.clientHeight);
-    renderer.setPixelRatio(Math.min(1.6, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(1.35, window.devicePixelRatio || 1));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -111,7 +113,7 @@ if (section && canvas && portal && contact) {
     const canvasFade = 1 - smoothstep(0.79, 0.845, progress);
     canvas.style.opacity = String(canvasFade);
 
-    const contentPhase = smoothstep(0.875, 0.94, progress);
+    const contentPhase = smoothstep(0.93, 0.97, progress);
     if (contactContent) {
       contactContent.style.opacity = String(contentPhase);
       contactContent.style.transform = `translateY(${(1 - contentPhase) * 44}px) scale(${0.985 + contentPhase * 0.015})`;
@@ -119,18 +121,24 @@ if (section && canvas && portal && contact) {
     }
     contact.classList.toggle("show-contact", contentPhase > 0.01);
 
-    if (progress >= 0.83 && !finaleLaunched) {
+    if (progress >= 0.875 && !finaleLaunched) {
       finaleLaunched = true;
-      fireworksStopAt = performance.now() + 5200;
       launchFinale();
-    } else if (progress < 0.77 && finaleLaunched) {
+    } else if (progress < 0.8 && finaleLaunched) {
       finaleLaunched = false;
+      ambientFireworksStarted = false;
       fireworksActive = false;
       particles.length = 0;
     }
+    if (progress >= 0.93 && finaleLaunched && !ambientFireworksStarted) {
+      ambientFireworksStarted = true;
+      fireworksStopAt = performance.now() + 4400;
+      createBurst(0.95);
+      lastBurst = performance.now();
+    }
     fireworksActive =
-      finaleLaunched &&
-      progress >= 0.8 &&
+      ambientFireworksStarted &&
+      progress >= 0.93 &&
       progress < 0.995 &&
       performance.now() < fireworksStopAt;
   }
@@ -188,7 +196,6 @@ if (section && canvas && portal && contact) {
     trigger: section,
     start: "top top",
     end: "bottom bottom",
-    scrub: reduceMotion ? false : 0.8,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       scrollProgress = reduceMotion ? (self.progress > 0.25 ? 1 : 0) : self.progress;
@@ -196,6 +203,10 @@ if (section && canvas && portal && contact) {
   });
 
   function render() {
+    if (!transitionVisible || document.hidden) {
+      requestAnimationFrame(render);
+      return;
+    }
     renderedProgress += (scrollProgress - renderedProgress) * (reduceMotion ? 1 : 0.075);
     pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.075);
     parallaxRoot.rotation.x = pointerCurrent.y * -0.11;
@@ -218,6 +229,12 @@ if (section && canvas && portal && contact) {
       ScrollTrigger.update();
     });
   });
+  function updateTransitionVisibility() {
+    const rect = section.getBoundingClientRect();
+    transitionVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+  }
+  window.addEventListener("scroll", updateTransitionVisibility, { passive: true });
+  updateTransitionVisibility();
   window.addEventListener("pointermove", (event) => {
     pointerTarget.set(
       THREE.MathUtils.clamp((event.clientX / window.innerWidth) * 2 - 1, -1, 1),
@@ -239,7 +256,7 @@ if (section && canvas && portal && contact) {
     const rect = fireworksCanvas.getBoundingClientRect();
     fireworksWidth = Math.max(1, rect.width);
     fireworksHeight = Math.max(1, rect.height);
-    fireworksDpr = Math.min(2, window.devicePixelRatio || 1);
+    fireworksDpr = Math.min(1.35, window.devicePixelRatio || 1);
     fireworksCanvas.width = Math.round(fireworksWidth * fireworksDpr);
     fireworksCanvas.height = Math.round(fireworksHeight * fireworksDpr);
     fireworksContext.setTransform(fireworksDpr, 0, 0, fireworksDpr, 0, 0);
@@ -279,6 +296,10 @@ if (section && canvas && portal && contact) {
 
   function animateFireworks(time) {
     if (!fireworksContext) return;
+    if ((!fireworksActive && particles.length === 0) || document.hidden) {
+      requestAnimationFrame(animateFireworks);
+      return;
+    }
     fireworksContext.clearRect(0, 0, fireworksWidth, fireworksHeight);
 
     if (fireworksActive && time - lastBurst > 820 + Math.random() * 500) {

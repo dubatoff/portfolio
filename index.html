@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=26" />
+    <link rel="stylesheet" href="./styles.css?v=27" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -221,9 +221,9 @@
         }
       }
     </script>
-    <script src="./script.js?v=17"></script>
+    <script src="./script.js?v=18"></script>
     <script type="module">
-      import("./logo-transition.js?v=11").catch((error) => {
+      import("./logo-transition.js?v=16").catch((error) => {
         console.error("3D transition failed:", error);
         const status = document.getElementById("logoTransitionLoading");
         if (status) status.textContent = "3D ERROR";

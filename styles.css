@@ -1915,7 +1915,8 @@ img {
   position: sticky;
   top: 0;
   width: 100%;
-  height: 100svh;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   isolation: isolate;
   background: #121312;
@@ -2005,7 +2006,7 @@ img {
   pointer-events: none;
   opacity: 0;
   filter: saturate(1.04) contrast(1.02);
-  transition: opacity .55s ease;
+  transition: opacity .15s linear;
 }
 
 .logo-transition.is-model-ready .logo-transition__canvas { opacity: 1; }
@@ -2026,13 +2027,8 @@ img {
 }
 
 .logo-transition__portal {
-  z-index: 2;
-  background:
-    linear-gradient(rgba(227,227,219,.13) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(227,227,219,.13) 1px, transparent 1px),
-    #121312;
-  background-size: 100% 33.14815%, 31.14583% 100%;
-  background-position: 0 0, 3.22917% 0;
+  z-index: 5;
+  background: transparent;
   opacity: 0;
   pointer-events: none;
 }

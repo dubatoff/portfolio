@@ -730,7 +730,7 @@
     requestAnimationFrame(animateCursor);
   }
 
-  if (finePointer) {
+  if (finePointer && !body.classList.contains("native-cursor")) {
     window.addEventListener("pointermove", (event) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
@@ -853,20 +853,23 @@
 
   window.addEventListener("scroll", () => { latestScrollY = window.scrollY; }, { passive: true });
 
+  let cardsSettled = false;
   function animateInteractions(now) {
-    heroCurrentX += (heroTargetX - heroCurrentX) * 0.055;
-    heroCurrentY += (heroTargetY - heroCurrentY) * 0.055;
-    const floatX = reduceMotion ? 0 : Math.sin(now * 0.00031) * 2.2;
-    const floatY = reduceMotion ? 0 : Math.cos(now * 0.00027) * 3;
-    heroCenter?.style.setProperty("--hero-x", `${heroCurrentX * 32 + floatX}px`);
-    heroCenter?.style.setProperty("--hero-y", `${heroCurrentY * 21 + floatY}px`);
-    heroCenter?.style.setProperty("--hero-rx", `${-heroCurrentY * 2.2}deg`);
-    heroCenter?.style.setProperty("--hero-ry", `${heroCurrentX * 2.8}deg`);
-    if (heroBackground && !hero.classList.contains("webgl-ready")) {
-      heroBackground.style.transform = `scale(1.028) translate3d(${heroCurrentX * -7}px, ${heroCurrentY * -5}px, 0)`;
-    }
-    if (heroDecoration) {
-      heroDecoration.style.transform = `translate3d(${heroCurrentX * 18}px, ${heroCurrentY * 13}px, 0) rotate(${heroCurrentX * 2}deg)`;
+    if (heroVisible) {
+      heroCurrentX += (heroTargetX - heroCurrentX) * 0.055;
+      heroCurrentY += (heroTargetY - heroCurrentY) * 0.055;
+      const floatX = reduceMotion ? 0 : Math.sin(now * 0.00031) * 2.2;
+      const floatY = reduceMotion ? 0 : Math.cos(now * 0.00027) * 3;
+      heroCenter?.style.setProperty("--hero-x", `${heroCurrentX * 32 + floatX}px`);
+      heroCenter?.style.setProperty("--hero-y", `${heroCurrentY * 21 + floatY}px`);
+      heroCenter?.style.setProperty("--hero-rx", `${-heroCurrentY * 2.2}deg`);
+      heroCenter?.style.setProperty("--hero-ry", `${heroCurrentX * 2.8}deg`);
+      if (heroBackground && !hero.classList.contains("webgl-ready")) {
+        heroBackground.style.transform = `scale(1.028) translate3d(${heroCurrentX * -7}px, ${heroCurrentY * -5}px, 0)`;
+      }
+      if (heroDecoration) {
+        heroDecoration.style.transform = `translate3d(${heroCurrentX * 18}px, ${heroCurrentY * 13}px, 0) rotate(${heroCurrentX * 2}deg)`;
+      }
     }
 
     const rawVelocity = latestScrollY - previousScrollY;
@@ -875,11 +878,15 @@
     scrollVelocity *= 0.86;
     const bend = reduceMotion ? 0 : Math.max(-5.2, Math.min(5.2, scrollVelocity * -0.075));
     const skew = reduceMotion ? 0 : Math.max(-1.1, Math.min(1.1, scrollVelocity * 0.014));
-    workCards.forEach((card, index) => {
-      const direction = index % 2 ? -1 : 1;
-      card.style.setProperty("--scroll-bend", `${bend * direction}deg`);
-      card.style.setProperty("--scroll-skew", `${skew * direction}deg`);
-    });
+    const cardsMoving = Math.abs(rawVelocity) > 0.01 || Math.abs(scrollVelocity) > 0.03;
+    if (cardsMoving || !cardsSettled) {
+      workCards.forEach((card, index) => {
+        const direction = index % 2 ? -1 : 1;
+        card.style.setProperty("--scroll-bend", `${bend * direction}deg`);
+        card.style.setProperty("--scroll-skew", `${skew * direction}deg`);
+      });
+      cardsSettled = !cardsMoving;
+    }
     interactionFrame = requestAnimationFrame(animateInteractions);
   }
   interactionFrame = requestAnimationFrame(animateInteractions);
@@ -920,7 +927,7 @@
   window.setInterval(updateMoscowWeather, 10 * 60 * 1000);
 
   const canvas = document.getElementById("fireworks");
-  const context = canvas.getContext("2d");
+  const context = hasLogoTransition ? null : canvas.getContext("2d");
   const contactStage = contact.querySelector(".contact__stage");
   const contactCursor = contact.querySelector(".contact__cursor-3d");
   let canvasWidth = 0;
@@ -973,18 +980,20 @@
     context.globalAlpha = 1;
   }
 
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+  if (!hasLogoTransition) {
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-  const contactObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const active = entry.isIntersecting;
-      contact.classList.toggle("is-active", active);
-      cursor.classList.toggle("is-contact", active);
-      if (active) resizeCanvas();
-    });
-  }, { threshold: 0.01 });
-  contactObserver.observe(contact);
+    const contactObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const active = entry.isIntersecting;
+        contact.classList.toggle("is-active", active);
+        cursor.classList.toggle("is-contact", active);
+        if (active) resizeCanvas();
+      });
+    }, { threshold: 0.01 });
+    contactObserver.observe(contact);
+  }
 
   function updateContactSequence() {
     if (hasLogoTransition) return;
