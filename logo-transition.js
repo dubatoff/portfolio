@@ -102,7 +102,7 @@ if (section && canvas && portal && contact) {
     const rotationPhase = smoothstep(0.02, 0.62, progress);
     const approachPhase = smoothstep(0.38, 0.8, progress);
     const finalRush = Math.pow(approachPhase, 2.25);
-    const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 14.5;
+    const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 3.8;
 
     modelRoot.scale.setScalar(baseScale * scaleMultiplier);
     modelRoot.rotation.x = -0.115 + Math.sin(rotationPhase * Math.PI) * 0.08;
@@ -114,7 +114,7 @@ if (section && canvas && portal && contact) {
     portal.style.opacity = String(darkScreenPhase);
     section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    const canvasFade = 1 - smoothstep(0.72, 0.77, scrollProgress);
+    const canvasFade = 1 - smoothstep(0.8, 0.86, scrollProgress);
     canvas.style.opacity = String(canvasFade);
 
     const contentPhase = smoothstep(0.93, 0.97, progress);
@@ -222,7 +222,7 @@ if (section && canvas && portal && contact) {
     parallaxRoot.position.x = pointerCurrent.x * 0.12;
     parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
-    const modelIsVisible = scrollProgress < 0.78 && renderedProgress < 0.8;
+    const modelIsVisible = scrollProgress < 0.865 && renderedProgress < 0.9;
     const modelIsMoving = progressDelta > 0.00025 || pointerDelta > 0.00025;
     if (
       modelIsVisible &&
