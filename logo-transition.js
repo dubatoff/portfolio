@@ -214,7 +214,7 @@ if (section && canvas && portal && contact) {
     parallaxRoot.position.x = pointerCurrent.x * 0.12;
     parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
-    renderer.render(scene, camera);
+    if (renderedProgress < 0.87) renderer.render(scene, camera);
     requestAnimationFrame(render);
   }
 
@@ -256,16 +256,16 @@ if (section && canvas && portal && contact) {
     const rect = fireworksCanvas.getBoundingClientRect();
     fireworksWidth = Math.max(1, rect.width);
     fireworksHeight = Math.max(1, rect.height);
-    fireworksDpr = Math.min(1.35, window.devicePixelRatio || 1);
+    fireworksDpr = Math.min(1.15, window.devicePixelRatio || 1);
     fireworksCanvas.width = Math.round(fireworksWidth * fireworksDpr);
     fireworksCanvas.height = Math.round(fireworksHeight * fireworksDpr);
     fireworksContext.setTransform(fireworksDpr, 0, 0, fireworksDpr, 0, 0);
   }
 
-  function createBurst(size = 1) {
-    const originX = fireworksWidth * (0.12 + Math.random() * 0.76);
-    const originY = fireworksHeight * (0.12 + Math.random() * 0.42);
-    const count = Math.round((68 + Math.random() * 34) * size);
+  function createBurst(size = 1, originRatioX = null, originRatioY = null, density = 1) {
+    const originX = fireworksWidth * (originRatioX ?? (0.12 + Math.random() * 0.76));
+    const originY = fireworksHeight * (originRatioY ?? (0.12 + Math.random() * 0.42));
+    const count = Math.round((64 + Math.random() * 26) * Math.sqrt(size) * density);
     for (let index = 0; index < count; index += 1) {
       const angle = (Math.PI * 2 * index) / count + Math.random() * 0.08;
       const speed = (1.9 + Math.random() * 4.8) * size;
@@ -285,13 +285,13 @@ if (section && canvas && portal && contact) {
 
   function launchFinale() {
     resizeFireworks();
-    createBurst(2.15);
+    createBurst(3.6, 0.5, 0.46, 1.15);
     window.setTimeout(() => {
-      if (finaleLaunched && scrollProgress >= 0.77) createBurst(1.85);
-    }, 230);
+      if (finaleLaunched && scrollProgress >= 0.8) createBurst(3.1, 0.22, 0.3, 0.95);
+    }, 190);
     window.setTimeout(() => {
-      if (finaleLaunched && scrollProgress >= 0.77) createBurst(1.55);
-    }, 480);
+      if (finaleLaunched && scrollProgress >= 0.8) createBurst(2.85, 0.78, 0.32, 0.9);
+    }, 380);
   }
 
   function animateFireworks(time) {
