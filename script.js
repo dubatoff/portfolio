@@ -769,8 +769,9 @@
 
   const heroCursorObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
+      const heroIsActive = entry.isIntersecting && entry.intersectionRatio > 0.42;
       heroVisible = entry.isIntersecting;
-      body.classList.toggle("native-cursor", entry.isIntersecting);
+      body.classList.toggle("native-cursor", heroIsActive);
     });
   }, { threshold: [0, 0.42, 0.75] });
   heroCursorObserver.observe(hero);
