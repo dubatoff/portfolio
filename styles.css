@@ -1641,6 +1641,55 @@ img {
 
 /* Figma 1398:2539 — exact desktop geometry and typography for About. */
 .about { height: 56.25vw; min-height: 56.25vw; }
+.about__unified-grid {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(33.14815% - .5px),
+      rgba(227, 227, 219, .13) calc(33.14815% - .5px),
+      rgba(227, 227, 219, .13) calc(33.14815% + .5px),
+      transparent calc(33.14815% + .5px),
+      transparent calc(67.96296% - .5px),
+      rgba(227, 227, 219, .13) calc(67.96296% - .5px),
+      rgba(227, 227, 219, .13) calc(67.96296% + .5px),
+      transparent calc(67.96296% + .5px)
+    ),
+    radial-gradient(circle at 75% 15%, rgba(192, 254, 4, .035), transparent 27%),
+    radial-gradient(circle at 20% 70%, rgba(164, 176, 88, .035), transparent 23%),
+    #121312;
+}
+.about__unified-grid::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(3.22917% - .5px),
+      rgba(227, 227, 219, .13) calc(3.22917% - .5px),
+      rgba(227, 227, 219, .13) calc(3.22917% + .5px),
+      transparent calc(3.22917% + .5px),
+      transparent calc(34.375% - .5px),
+      rgba(227, 227, 219, .13) calc(34.375% - .5px),
+      rgba(227, 227, 219, .13) calc(34.375% + .5px),
+      transparent calc(34.375% + .5px),
+      transparent calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% + .5px),
+      transparent calc(65.52083% + .5px),
+      transparent calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% + .5px),
+      transparent calc(96.66667% + .5px)
+    );
+}
+.about__stage { z-index: 1; }
 .about__brand,
 .about__nav { position: absolute; z-index: 8; }
 .about__brand { top: 3.6458vw; left: 3.6458vw; font-size: 1.40625vw; letter-spacing: .05625vw; }
