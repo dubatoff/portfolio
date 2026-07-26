@@ -102,7 +102,9 @@ if (section && canvas && portal && contact) {
     const rotationPhase = smoothstep(0.02, 0.62, progress);
     const approachPhase = smoothstep(0.38, 0.76, progress);
     const finalRush = Math.pow(approachPhase, 2.25);
-    const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 3.8;
+    const fullCoverPhase = smoothstep(0.76, 0.93, progress);
+    const scaleMultiplier =
+      1 + rotationPhase * 0.34 + finalRush * 3.8 + fullCoverPhase * 4;
 
     modelRoot.scale.setScalar(baseScale * scaleMultiplier);
     modelRoot.rotation.x = -0.115 + Math.sin(rotationPhase * Math.PI) * 0.08;
@@ -110,14 +112,14 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
 
-    const darkScreenPhase = smoothstep(0.84, 0.9, progress);
+    const darkScreenPhase = smoothstep(0.94, 0.97, progress);
     portal.style.opacity = String(darkScreenPhase);
     section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    const canvasFade = 1 - smoothstep(0.84, 0.89, progress);
+    const canvasFade = 1 - smoothstep(0.925, 0.96, progress);
     canvas.style.opacity = String(canvasFade);
 
-    const contentPhase = scrollProgress >= 0.95 ? smoothstep(0.955, 0.985, progress) : 0;
+    const contentPhase = scrollProgress >= 0.98 ? smoothstep(0.98, 0.997, progress) : 0;
     if (contactContent) {
       contactContent.style.opacity = String(contentPhase);
       contactContent.style.transform = `translateY(${(1 - contentPhase) * 44}px) scale(${0.985 + contentPhase * 0.015})`;
@@ -125,7 +127,7 @@ if (section && canvas && portal && contact) {
     }
     contact.classList.toggle("show-contact", contentPhase > 0.01);
 
-    if (scrollProgress >= 0.92 && progress >= 0.905 && !finaleLaunched) {
+    if (scrollProgress >= 0.965 && progress >= 0.965 && !finaleLaunched) {
       finaleLaunched = true;
       launchFinale();
     } else if ((scrollProgress < 0.86 || progress < 0.82) && finaleLaunched) {
@@ -135,8 +137,8 @@ if (section && canvas && portal && contact) {
       particles.length = 0;
     }
     if (
-      scrollProgress >= 0.95 &&
-      progress >= 0.955 &&
+      scrollProgress >= 0.98 &&
+      progress >= 0.98 &&
       finaleLaunched &&
       !ambientFireworksStarted
     ) {
@@ -147,7 +149,7 @@ if (section && canvas && portal && contact) {
     }
     fireworksActive =
       ambientFireworksStarted &&
-      progress >= 0.955 &&
+      progress >= 0.98 &&
       progress < 0.995 &&
       performance.now() < fireworksStopAt;
   }
@@ -230,7 +232,7 @@ if (section && canvas && portal && contact) {
     parallaxRoot.position.x = pointerCurrent.x * 0.12;
     parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
-    const modelIsVisible = renderedProgress < 0.9;
+    const modelIsVisible = renderedProgress < 0.965;
     const modelIsMoving = progressDelta > 0.00025 || pointerDelta > 0.00025;
     if (
       modelIsVisible &&
