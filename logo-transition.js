@@ -8,7 +8,6 @@ const section = document.getElementById("logoTransition");
 const canvas = document.getElementById("logoTransitionCanvas");
 const loading = document.getElementById("logoTransitionLoading");
 const portal = document.getElementById("logoTransitionPortal");
-const portalContent = portal?.querySelector(".logo-transition__portal-content");
 const contact = document.getElementById("contact");
 const fireworksCanvas = document.getElementById("fireworks");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -23,7 +22,7 @@ if (section && canvas && portal && contact) {
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.setPixelRatio(Math.min(1.6, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.18;
@@ -53,17 +52,21 @@ if (section && canvas && portal && contact) {
 
   const modelRoot = new THREE.Group();
   scene.add(modelRoot);
+  const parallaxRoot = new THREE.Group();
+  modelRoot.add(parallaxRoot);
 
   let model = null;
   let baseScale = 1;
   let scrollProgress = 0;
   let renderedProgress = 0;
   let modelReady = false;
+  const pointerTarget = new THREE.Vector2();
+  const pointerCurrent = new THREE.Vector2();
 
   function resizeRenderer() {
     const width = Math.max(1, canvas.clientWidth);
     const height = Math.max(1, canvas.clientHeight);
-    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(1.6, window.devicePixelRatio || 1));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -77,29 +80,22 @@ if (section && canvas && portal && contact) {
   function applyProgress(progress) {
     if (!modelReady || !model) return;
 
-    const rotationPhase = smoothstep(0.02, 0.7, progress);
+    const rotationPhase = smoothstep(0.02, 0.78, progress);
     const approachPhase = smoothstep(0.5, 0.98, progress);
     const finalRush = Math.pow(approachPhase, 2.25);
     const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 14.5;
 
     modelRoot.scale.setScalar(baseScale * scaleMultiplier);
     modelRoot.rotation.x = -0.115 + Math.sin(rotationPhase * Math.PI) * 0.08;
-    modelRoot.rotation.y = -0.23 + rotationPhase * 0.34 + finalRush * 0.12;
+    modelRoot.rotation.y = -0.23 + rotationPhase * Math.PI * 2;
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
 
-    const portalPhase = smoothstep(0.79, 0.985, progress);
-    const portalRadius = portalPhase * 145;
-    portal.style.clipPath = `circle(${portalRadius}% at 50% 50%)`;
-    section.classList.toggle("is-portal-open", portalPhase > 0.48);
+    const darkScreenPhase = smoothstep(0.945, 0.995, progress);
+    portal.style.opacity = String(darkScreenPhase);
+    section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    if (portalContent) {
-      const contentPhase = smoothstep(0.88, 0.99, progress);
-      portalContent.style.opacity = String(contentPhase);
-      portalContent.style.transform = `translateY(${(1 - contentPhase) * 35}px)`;
-    }
-
-    const canvasFade = 1 - smoothstep(0.91, 0.995, progress);
+    const canvasFade = 1 - smoothstep(0.965, 0.999, progress);
     canvas.style.opacity = String(canvasFade);
   }
 
@@ -108,7 +104,7 @@ if (section && canvas && portal && contact) {
     "./public/assets/dubatoff-logo-3d.gltf",
     (gltf) => {
       model = gltf.scene;
-      modelRoot.add(model);
+      parallaxRoot.add(model);
 
       model.traverse((object) => {
         if (!object.isMesh) return;
@@ -160,6 +156,11 @@ if (section && canvas && portal && contact) {
 
   function render() {
     renderedProgress += (scrollProgress - renderedProgress) * (reduceMotion ? 1 : 0.075);
+    pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.075);
+    parallaxRoot.rotation.x = pointerCurrent.y * -0.11;
+    parallaxRoot.rotation.y = pointerCurrent.x * 0.15;
+    parallaxRoot.position.x = pointerCurrent.x * 0.12;
+    parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -170,6 +171,13 @@ if (section && canvas && portal && contact) {
     resizeRenderer();
     ScrollTrigger.refresh();
   });
+  window.addEventListener("pointermove", (event) => {
+    pointerTarget.set(
+      THREE.MathUtils.clamp((event.clientX / window.innerWidth) * 2 - 1, -1, 1),
+      THREE.MathUtils.clamp((event.clientY / window.innerHeight) * 2 - 1, -1, 1),
+    );
+  });
+  document.documentElement.addEventListener("mouseleave", () => pointerTarget.set(0, 0));
   render();
 
   const fireworksContext = fireworksCanvas?.getContext("2d");

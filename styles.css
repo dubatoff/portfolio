@@ -2027,46 +2027,14 @@ img {
 
 .logo-transition__portal {
   z-index: 2;
-  display: grid;
-  place-items: center;
-  color: #fff;
   background:
     linear-gradient(rgba(227,227,219,.13) 1px, transparent 1px),
     linear-gradient(90deg, rgba(227,227,219,.13) 1px, transparent 1px),
     #121312;
   background-size: 100% 33.14815%, 31.14583% 100%;
   background-position: 0 0, 3.22917% 0;
-  clip-path: circle(0% at 50% 50%);
-  pointer-events: none;
-}
-
-.logo-transition__portal-content {
-  display: grid;
-  width: 100%;
-  place-items: center;
-  gap: clamp(36px, 4vw, 78px);
   opacity: 0;
-  transform: translateY(35px);
-}
-
-.logo-transition__portal-content > span {
-  font-family: "SF Pro Display", Arial, sans-serif;
-  font-size: clamp(92px, 12.2vw, 234px);
-  font-weight: 400;
-  line-height: .82;
-  letter-spacing: -.055em;
-}
-
-.logo-transition__portal-content i {
-  display: grid;
-  width: min(31.2vw, 600px);
-  height: clamp(72px, 7.5vw, 144px);
-  place-items: center;
-  border-radius: 999px;
-  color: #121312;
-  background: var(--acid);
-  font-size: clamp(24px, 2.45vw, 47px);
-  font-style: normal;
+  pointer-events: none;
 }
 
 .logo-transition.is-portal-open .logo-transition__chrome { opacity: 0; }
@@ -2094,7 +2062,5 @@ img {
   .logo-transition { height: 300svh; }
   .logo-transition__chrome > a { top: 24px; left: 18px; font-size: 10px; }
   .logo-transition__chrome nav { top: 24px; right: 18px; gap: 12px; font-size: 10px; }
-  .logo-transition__portal-content > span { font-size: clamp(68px, 20vw, 110px); }
-  .logo-transition__portal-content i { width: min(78vw, 420px); }
   .contact { min-height: 100svh; }
 }
