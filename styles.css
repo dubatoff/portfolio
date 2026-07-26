@@ -1902,3 +1902,199 @@ img {
   .portfolio-nav { top: 24px; right: 18px; width: 210px; gap: 0; font-size: 0; }
   .contact { min-height: 150svh; }
 }
+
+/* Screen 08 — scroll-driven 3D logo transition. */
+.logo-transition {
+  position: relative;
+  z-index: 4;
+  height: 360svh;
+  background: #121312;
+}
+
+.logo-transition__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #121312;
+}
+
+.logo-transition__grid,
+.logo-transition__portal {
+  position: absolute;
+  inset: 0;
+}
+
+.logo-transition__grid {
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(33.14815% - .5px),
+      rgba(227, 227, 219, .13) calc(33.14815% - .5px),
+      rgba(227, 227, 219, .13) calc(33.14815% + .5px),
+      transparent calc(33.14815% + .5px),
+      transparent calc(67.96296% - .5px),
+      rgba(227, 227, 219, .13) calc(67.96296% - .5px),
+      rgba(227, 227, 219, .13) calc(67.96296% + .5px),
+      transparent calc(67.96296% + .5px)
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(3.22917% - .5px),
+      rgba(227, 227, 219, .13) calc(3.22917% - .5px),
+      rgba(227, 227, 219, .13) calc(3.22917% + .5px),
+      transparent calc(3.22917% + .5px),
+      transparent calc(34.375% - .5px),
+      rgba(227, 227, 219, .13) calc(34.375% - .5px),
+      rgba(227, 227, 219, .13) calc(34.375% + .5px),
+      transparent calc(34.375% + .5px),
+      transparent calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% - .5px),
+      rgba(227, 227, 219, .13) calc(65.52083% + .5px),
+      transparent calc(65.52083% + .5px),
+      transparent calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% - .5px),
+      rgba(227, 227, 219, .13) calc(96.66667% + .5px),
+      transparent calc(96.66667% + .5px)
+    ),
+    radial-gradient(circle at 72% 18%, rgba(28, 50, 183, .055), transparent 30%),
+    #121312;
+}
+
+.logo-transition__chrome {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+
+.logo-transition__chrome > a {
+  position: absolute;
+  top: 6.5%;
+  left: 3.65%;
+  color: #e3e3db;
+  font-size: clamp(13px, 1.05vw, 20px);
+  pointer-events: auto;
+}
+
+.logo-transition__chrome nav {
+  position: absolute;
+  top: 6.5%;
+  right: 3.65%;
+  display: flex;
+  gap: clamp(22px, 2.1vw, 42px);
+  font-size: clamp(13px, 1.05vw, 20px);
+  pointer-events: auto;
+}
+
+.logo-transition__chrome .is-active { color: var(--acid); }
+
+.logo-transition__canvas {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  filter: saturate(1.04) contrast(1.02);
+  transition: opacity .55s ease;
+}
+
+.logo-transition.is-model-ready .logo-transition__canvas { opacity: 1; }
+
+.logo-transition__loading {
+  position: absolute;
+  z-index: 7;
+  top: 50%;
+  left: 50%;
+  color: rgba(227, 227, 219, .62);
+  font-size: clamp(10px, .72vw, 14px);
+  transform: translate(-50%, 7vw);
+  transition: opacity .35s ease;
+}
+
+.logo-transition.is-model-ready .logo-transition__loading {
+  opacity: 0;
+}
+
+.logo-transition__portal {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background:
+    linear-gradient(rgba(227,227,219,.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(227,227,219,.13) 1px, transparent 1px),
+    #121312;
+  background-size: 100% 33.14815%, 31.14583% 100%;
+  background-position: 0 0, 3.22917% 0;
+  clip-path: circle(0% at 50% 50%);
+  pointer-events: none;
+}
+
+.logo-transition__portal-content {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  gap: clamp(36px, 4vw, 78px);
+  opacity: 0;
+  transform: translateY(35px);
+}
+
+.logo-transition__portal-content > span {
+  font-family: "SF Pro Display", Arial, sans-serif;
+  font-size: clamp(92px, 12.2vw, 234px);
+  font-weight: 400;
+  line-height: .82;
+  letter-spacing: -.055em;
+}
+
+.logo-transition__portal-content i {
+  display: grid;
+  width: min(31.2vw, 600px);
+  height: clamp(72px, 7.5vw, 144px);
+  place-items: center;
+  border-radius: 999px;
+  color: #121312;
+  background: var(--acid);
+  font-size: clamp(24px, 2.45vw, 47px);
+  font-style: normal;
+}
+
+.logo-transition.is-portal-open .logo-transition__chrome { opacity: 0; }
+
+/* Screen 09 — final contact revealed by the 3D transition. */
+.contact {
+  min-height: 100svh;
+  height: 100svh;
+}
+
+.contact__stage {
+  position: relative;
+  height: 100svh;
+}
+
+.contact #fireworks {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.contact__noise { opacity: .08; }
+.contact__cursor-3d { display: none !important; }
+
+@media (max-width: 760px) {
+  .logo-transition { height: 300svh; }
+  .logo-transition__chrome > a { top: 24px; left: 18px; font-size: 10px; }
+  .logo-transition__chrome nav { top: 24px; right: 18px; gap: 12px; font-size: 10px; }
+  .logo-transition__portal-content > span { font-size: clamp(68px, 20vw, 110px); }
+  .logo-transition__portal-content i { width: min(78vw, 420px); }
+  .contact { min-height: 100svh; }
+}

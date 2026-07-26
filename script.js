@@ -10,6 +10,7 @@
   const fixedMark = document.getElementById("fixedMark");
   const fixedLiveStatus = document.getElementById("fixedLiveStatus");
   const contact = document.getElementById("contact");
+  const hasLogoTransition = Boolean(document.getElementById("logoTransition"));
   const about = document.getElementById("about");
   const aboutSignature = about?.querySelector(".about__signature");
   const hero = document.getElementById("main");
@@ -986,6 +987,7 @@
   contactObserver.observe(contact);
 
   function updateContactSequence() {
+    if (hasLogoTransition) return;
     const rect = contact.getBoundingClientRect();
     const travel = Math.max(1, contact.offsetHeight - innerHeight);
     const progress = Math.max(0, Math.min(1, -rect.top / travel));
