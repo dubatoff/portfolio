@@ -110,7 +110,7 @@ if (section && canvas && portal && contact) {
     portal.style.opacity = String(darkScreenPhase);
     section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    const canvasFade = 1 - smoothstep(0.79, 0.845, progress);
+    const canvasFade = 1 - smoothstep(0.72, 0.77, scrollProgress);
     canvas.style.opacity = String(canvasFade);
 
     const contentPhase = smoothstep(0.93, 0.97, progress);
