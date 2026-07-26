@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=24" />
+    <link rel="stylesheet" href="./styles.css?v=26" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -193,32 +193,24 @@
           </div>
           <canvas class="logo-transition__canvas" id="logoTransitionCanvas" aria-hidden="true"></canvas>
           <div class="logo-transition__loading pixel" id="logoTransitionLoading">LOADING 3D / 00%</div>
-          <div class="logo-transition__portal" id="logoTransitionPortal" aria-hidden="true"></div>
-        </div>
-      </section>
-
-      <section class="contact" id="contact" aria-labelledby="contactTitle">
-        <div class="contact__stage">
-          <div class="contact__chrome pixel">
-            <a class="contact__brand" href="#main">DUBATOFF DESIGN</a>
-            <nav aria-label="Навигация">
-              <a href="#main">MAIN</a><a href="#about">ABOUT</a><a href="#work">WORK</a><a class="is-active" href="#contact">CONTACT</a>
-            </nav>
-            <span class="contact__clock" id="clock">GMT+3 MSK --:-- --°C</span>
-            <span class="contact__coords">1702 X 1510 Y</span>
+          <div class="logo-transition__portal" id="logoTransitionPortal">
+            <div class="contact logo-transition__contact" id="contactPanel" aria-labelledby="contactTitle">
+              <div class="contact__stage">
+                <canvas id="fireworks" aria-hidden="true"></canvas>
+                <div class="contact__noise" aria-hidden="true"></div>
+                <div class="contact__cursor-3d" aria-hidden="true"><span></span></div>
+                <div class="contact__content">
+                  <p class="pixel contact__eyebrow">HAVE A PROJECT? / LET'S TALK</p>
+                  <h2 id="contactTitle">CONTACT ME</h2>
+                  <a class="contact__button" href="https://t.me/dubatoff17" target="_blank" rel="noreferrer">
+                    <span>Click</span><span class="contact__button-arrow">↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-          <canvas id="fireworks" aria-hidden="true"></canvas>
-          <div class="contact__noise" aria-hidden="true"></div>
-          <div class="contact__cursor-3d" aria-hidden="true"><span></span></div>
-          <div class="contact__content">
-            <p class="pixel contact__eyebrow">HAVE A PROJECT? / LET'S TALK</p>
-            <h2 id="contactTitle">CONTACT ME</h2>
-            <a class="contact__button" href="https://t.me/dubatoff17" target="_blank" rel="noreferrer">
-              <span>Click</span><span class="contact__button-arrow">↗</span>
-            </a>
-          </div>
-          <footer class="contact__footer pixel"><span>DUBATOFF©2026</span><span>TELEGRAM / DUBATOFF17</span></footer>
         </div>
+        <span class="logo-transition__contact-anchor" id="contact" aria-hidden="true"></span>
       </section>
     </main>
 
@@ -229,9 +221,9 @@
         }
       }
     </script>
-    <script src="./script.js?v=16"></script>
+    <script src="./script.js?v=17"></script>
     <script type="module">
-      import("./logo-transition.js?v=7").catch((error) => {
+      import("./logo-transition.js?v=11").catch((error) => {
         console.error("3D transition failed:", error);
         const status = document.getElementById("logoTransitionLoading");
         if (status) status.textContent = "3D ERROR";

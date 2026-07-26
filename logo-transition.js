@@ -8,7 +8,8 @@ const section = document.getElementById("logoTransition");
 const canvas = document.getElementById("logoTransitionCanvas");
 const loading = document.getElementById("logoTransitionLoading");
 const portal = document.getElementById("logoTransitionPortal");
-const contact = document.getElementById("contact");
+const contact = document.getElementById("contactPanel");
+const contactContent = contact?.querySelector(".contact__content");
 const fireworksCanvas = document.getElementById("fireworks");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -60,6 +61,9 @@ if (section && canvas && portal && contact) {
   let scrollProgress = 0;
   let renderedProgress = 0;
   let modelReady = false;
+  let fireworksActive = false;
+  let finaleLaunched = false;
+  let fireworksStopAt = 0;
   const pointerTarget = new THREE.Vector2();
   const pointerCurrent = new THREE.Vector2();
 
@@ -77,11 +81,20 @@ if (section && canvas && portal && contact) {
     return normalized * normalized * (3 - 2 * normalized);
   }
 
+  function alignContactAnchor() {
+    if (window.location.hash !== "#contact") return;
+    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
+    window.scrollTo({
+      top: sectionTop + section.offsetHeight - window.innerHeight,
+      behavior: "auto",
+    });
+  }
+
   function applyProgress(progress) {
     if (!modelReady || !model) return;
 
-    const rotationPhase = smoothstep(0.02, 0.78, progress);
-    const approachPhase = smoothstep(0.5, 0.98, progress);
+    const rotationPhase = smoothstep(0.02, 0.62, progress);
+    const approachPhase = smoothstep(0.38, 0.8, progress);
     const finalRush = Math.pow(approachPhase, 2.25);
     const scaleMultiplier = 1 + rotationPhase * 0.34 + finalRush * 14.5;
 
@@ -91,12 +104,35 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
 
-    const darkScreenPhase = smoothstep(0.945, 0.995, progress);
+    const darkScreenPhase = smoothstep(0.76, 0.84, progress);
     portal.style.opacity = String(darkScreenPhase);
     section.classList.toggle("is-portal-open", darkScreenPhase > 0.01);
 
-    const canvasFade = 1 - smoothstep(0.965, 0.999, progress);
+    const canvasFade = 1 - smoothstep(0.79, 0.845, progress);
     canvas.style.opacity = String(canvasFade);
+
+    const contentPhase = smoothstep(0.875, 0.94, progress);
+    if (contactContent) {
+      contactContent.style.opacity = String(contentPhase);
+      contactContent.style.transform = `translateY(${(1 - contentPhase) * 44}px) scale(${0.985 + contentPhase * 0.015})`;
+      contactContent.style.pointerEvents = contentPhase > 0.96 ? "auto" : "none";
+    }
+    contact.classList.toggle("show-contact", contentPhase > 0.01);
+
+    if (progress >= 0.83 && !finaleLaunched) {
+      finaleLaunched = true;
+      fireworksStopAt = performance.now() + 5200;
+      launchFinale();
+    } else if (progress < 0.77 && finaleLaunched) {
+      finaleLaunched = false;
+      fireworksActive = false;
+      particles.length = 0;
+    }
+    fireworksActive =
+      finaleLaunched &&
+      progress >= 0.8 &&
+      progress < 0.995 &&
+      performance.now() < fireworksStopAt;
   }
 
   const loader = new GLTFLoader();
@@ -131,6 +167,11 @@ if (section && canvas && portal && contact) {
 
       modelReady = true;
       section.classList.add("is-model-ready");
+      ScrollTrigger.refresh();
+      alignContactAnchor();
+      ScrollTrigger.update();
+      scrollProgress = transitionTrigger.progress;
+      renderedProgress = scrollProgress;
       applyProgress(scrollProgress);
     },
     (event) => {
@@ -143,7 +184,7 @@ if (section && canvas && portal && contact) {
     },
   );
 
-  ScrollTrigger.create({
+  const transitionTrigger = ScrollTrigger.create({
     trigger: section,
     start: "top top",
     end: "bottom bottom",
@@ -171,6 +212,12 @@ if (section && canvas && portal && contact) {
     resizeRenderer();
     ScrollTrigger.refresh();
   });
+  window.addEventListener("hashchange", () => {
+    window.requestAnimationFrame(() => {
+      alignContactAnchor();
+      ScrollTrigger.update();
+    });
+  });
   window.addEventListener("pointermove", (event) => {
     pointerTarget.set(
       THREE.MathUtils.clamp((event.clientX / window.innerWidth) * 2 - 1, -1, 1),
@@ -182,7 +229,6 @@ if (section && canvas && portal && contact) {
 
   const fireworksContext = fireworksCanvas?.getContext("2d");
   const particles = [];
-  let fireworksActive = false;
   let fireworksWidth = 0;
   let fireworksHeight = 0;
   let fireworksDpr = 1;
@@ -199,13 +245,13 @@ if (section && canvas && portal && contact) {
     fireworksContext.setTransform(fireworksDpr, 0, 0, fireworksDpr, 0, 0);
   }
 
-  function createBurst() {
-    const originX = fireworksWidth * (0.15 + Math.random() * 0.7);
-    const originY = fireworksHeight * (0.14 + Math.random() * 0.45);
-    const count = 58 + Math.floor(Math.random() * 28);
+  function createBurst(size = 1) {
+    const originX = fireworksWidth * (0.12 + Math.random() * 0.76);
+    const originY = fireworksHeight * (0.12 + Math.random() * 0.42);
+    const count = Math.round((68 + Math.random() * 34) * size);
     for (let index = 0; index < count; index += 1) {
       const angle = (Math.PI * 2 * index) / count + Math.random() * 0.08;
-      const speed = 1.6 + Math.random() * 4.2;
+      const speed = (1.9 + Math.random() * 4.8) * size;
       particles.push({
         x: originX,
         y: originY,
@@ -214,18 +260,29 @@ if (section && canvas && portal && contact) {
         velocityX: Math.cos(angle) * speed,
         velocityY: Math.sin(angle) * speed,
         life: 1,
-        decay: 0.012 + Math.random() * 0.012,
-        width: 0.7 + Math.random() * 1.7,
+        decay: 0.007 + Math.random() * (0.009 / Math.max(1, size)),
+        width: 1 + Math.random() * 1.6 * size,
       });
     }
+  }
+
+  function launchFinale() {
+    resizeFireworks();
+    createBurst(2.15);
+    window.setTimeout(() => {
+      if (finaleLaunched && scrollProgress >= 0.77) createBurst(1.85);
+    }, 230);
+    window.setTimeout(() => {
+      if (finaleLaunched && scrollProgress >= 0.77) createBurst(1.55);
+    }, 480);
   }
 
   function animateFireworks(time) {
     if (!fireworksContext) return;
     fireworksContext.clearRect(0, 0, fireworksWidth, fireworksHeight);
 
-    if (fireworksActive && time - lastBurst > 620 + Math.random() * 420) {
-      createBurst();
+    if (fireworksActive && time - lastBurst > 820 + Math.random() * 500) {
+      createBurst(0.95);
       lastBurst = time;
     }
 
@@ -257,20 +314,6 @@ if (section && canvas && portal && contact) {
     requestAnimationFrame(animateFireworks);
   }
 
-  const contactObserver = new IntersectionObserver(
-    ([entry]) => {
-      fireworksActive = entry.isIntersecting;
-      contact.classList.toggle("show-contact", entry.isIntersecting);
-      if (entry.isIntersecting) {
-        resizeFireworks();
-        createBurst();
-        window.setTimeout(createBurst, 240);
-      }
-    },
-    { threshold: 0.22 },
-  );
-
-  contactObserver.observe(contact);
   window.addEventListener("resize", resizeFireworks);
   resizeFireworks();
   requestAnimationFrame(animateFireworks);

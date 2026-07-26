@@ -9,7 +9,7 @@
   const loaderPercent = document.getElementById("loaderPercent");
   const fixedMark = document.getElementById("fixedMark");
   const fixedLiveStatus = document.getElementById("fixedLiveStatus");
-  const contact = document.getElementById("contact");
+  const contact = document.getElementById("contactPanel");
   const hasLogoTransition = Boolean(document.getElementById("logoTransition"));
   const about = document.getElementById("about");
   const aboutSignature = about?.querySelector(".about__signature");
