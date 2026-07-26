@@ -23,7 +23,7 @@ if (section && canvas && portal && contact) {
     powerPreference: "high-performance",
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(1.35, window.devicePixelRatio || 1));
+  renderer.setPixelRatio(Math.min(1.15, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.18;
@@ -66,16 +66,20 @@ if (section && canvas && portal && contact) {
   let ambientFireworksStarted = false;
   let fireworksStopAt = 0;
   let transitionVisible = false;
+  let modelFrameDirty = true;
+  let lastWebGLRender = 0;
+  const webGLFrameInterval = 1000 / 45;
   const pointerTarget = new THREE.Vector2();
   const pointerCurrent = new THREE.Vector2();
 
   function resizeRenderer() {
     const width = Math.max(1, canvas.clientWidth);
     const height = Math.max(1, canvas.clientHeight);
-    renderer.setPixelRatio(Math.min(1.35, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(1.15, window.devicePixelRatio || 1));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    modelFrameDirty = true;
   }
 
   function smoothstep(min, max, value) {
@@ -174,6 +178,7 @@ if (section && canvas && portal && contact) {
       baseScale = 2.15 / Math.max(0.001, size.x);
 
       modelReady = true;
+      modelFrameDirty = true;
       section.classList.add("is-model-ready");
       ScrollTrigger.refresh();
       alignContactAnchor();
@@ -199,14 +204,17 @@ if (section && canvas && portal && contact) {
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       scrollProgress = reduceMotion ? (self.progress > 0.25 ? 1 : 0) : self.progress;
+      modelFrameDirty = true;
     },
   });
 
-  function render() {
+  function render(time = 0) {
     if (!transitionVisible || document.hidden) {
       requestAnimationFrame(render);
       return;
     }
+    const progressDelta = Math.abs(scrollProgress - renderedProgress);
+    const pointerDelta = pointerCurrent.distanceTo(pointerTarget);
     renderedProgress += (scrollProgress - renderedProgress) * (reduceMotion ? 1 : 0.075);
     pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.075);
     parallaxRoot.rotation.x = pointerCurrent.y * -0.11;
@@ -214,7 +222,17 @@ if (section && canvas && portal && contact) {
     parallaxRoot.position.x = pointerCurrent.x * 0.12;
     parallaxRoot.position.y = pointerCurrent.y * -0.08;
     applyProgress(renderedProgress);
-    if (renderedProgress < 0.87) renderer.render(scene, camera);
+    const modelIsVisible = scrollProgress < 0.78 && renderedProgress < 0.8;
+    const modelIsMoving = progressDelta > 0.00025 || pointerDelta > 0.00025;
+    if (
+      modelIsVisible &&
+      (modelFrameDirty || modelIsMoving) &&
+      time - lastWebGLRender >= webGLFrameInterval
+    ) {
+      renderer.render(scene, camera);
+      lastWebGLRender = time;
+      modelFrameDirty = modelIsMoving;
+    }
     requestAnimationFrame(render);
   }
 
@@ -240,6 +258,7 @@ if (section && canvas && portal && contact) {
       THREE.MathUtils.clamp((event.clientX / window.innerWidth) * 2 - 1, -1, 1),
       THREE.MathUtils.clamp((event.clientY / window.innerHeight) * 2 - 1, -1, 1),
     );
+    modelFrameDirty = true;
   });
   document.documentElement.addEventListener("mouseleave", () => pointerTarget.set(0, 0));
   render();
