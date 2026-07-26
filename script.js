@@ -18,6 +18,7 @@
   let heroVisible = true;
 
   body.classList.add("is-loading");
+  body.classList.add("native-cursor");
 
   function runLoader() {
     const start = performance.now();
@@ -733,7 +734,7 @@
     window.addEventListener("pointermove", (event) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
-      if (performance.now() - lastPointerPixel > 34) {
+      if (!body.classList.contains("native-cursor") && performance.now() - lastPointerPixel > 34) {
         lastPointerPixel = performance.now();
         createTrailPixel(event.clientX, event.clientY);
       }
@@ -769,6 +770,7 @@
   const heroCursorObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       heroVisible = entry.isIntersecting;
+      body.classList.toggle("native-cursor", entry.isIntersecting);
     });
   }, { threshold: [0, 0.42, 0.75] });
   heroCursorObserver.observe(hero);
