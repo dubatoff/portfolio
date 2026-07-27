@@ -1212,14 +1212,29 @@ img {
   .loader__bottom span:last-child { display: none; }
   .fixed-mark {
     top: auto;
-    right: 12px;
-    bottom: 16px;
-    width: 83px;
-    height: 40px;
+    right: 10px;
+    bottom: 10px;
+    width: 70px;
+    height: 34px;
     opacity: 0;
     pointer-events: none;
   }
   .show-fixed-meta .fixed-mark { opacity: 1; }
+  .fixed-live-status,
+  .fixed-coords {
+    bottom: 23px;
+    min-width: 0;
+    padding: 0;
+    font-size: clamp(7px, 2vw, 9px);
+    line-height: 1;
+  }
+  .fixed-live-status {
+    left: 12px;
+  }
+  .fixed-coords {
+    left: 55%;
+    transform: translateX(-50%);
+  }
 
   .hero {
     min-height: 100svh;
