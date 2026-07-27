@@ -17,6 +17,8 @@
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
   const mobileMenu = document.getElementById("mobileMenu");
   const mobileMenuBackdrop = document.querySelector(".mobile-menu-backdrop");
+  const aboutMobilePanel = document.querySelector(".about-mobile-panel");
+  const aboutMobileToggle = document.querySelector(".about-mobile-switch__toggle");
   const qaMode = new URLSearchParams(window.location.search).has("qa");
   let heroVisible = true;
 
@@ -38,6 +40,24 @@
   mobileMenuBackdrop?.addEventListener("click", () => setMobileMenu(false));
   mobileMenu?.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => setMobileMenu(false));
+  });
+
+  function setAboutMobileMode(mode) {
+    if (!aboutMobilePanel || !aboutMobileToggle) return;
+    const nextMode = mode === "stack" ? "stack" : "about";
+    aboutMobilePanel.dataset.aboutMode = nextMode;
+    aboutMobileToggle.setAttribute("aria-pressed", String(nextMode === "stack"));
+    aboutMobileToggle.setAttribute("aria-label", nextMode === "stack" ? "Показать ABOUT" : "Показать STACK");
+    aboutMobilePanel.querySelectorAll("[data-about-label]").forEach((label) => {
+      label.classList.toggle("is-active", label.dataset.aboutLabel === nextMode);
+    });
+    aboutMobilePanel.querySelectorAll("[data-about-page]").forEach((page) => {
+      page.classList.toggle("is-active", page.dataset.aboutPage === nextMode);
+    });
+  }
+
+  aboutMobileToggle?.addEventListener("click", () => {
+    setAboutMobileMode(aboutMobilePanel?.dataset.aboutMode === "about" ? "stack" : "about");
   });
 
   function runLoader() {

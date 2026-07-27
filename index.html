@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=33" />
+    <link rel="stylesheet" href="./styles.css?v=34" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -31,6 +31,16 @@
     <img class="fixed-mark" id="fixedMark" src="./public/assets/persistent-logo.svg?v=2" alt="Dubatoff" />
     <span class="fixed-live-status pixel" id="fixedLiveStatus" aria-label="Московское время и температура">GMT+3 MSK --:-- --°C</span>
     <span class="fixed-coords pixel" id="fixedCoords">1702 X 1510 Y</span>
+    <button class="mobile-menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="mobile-menu-backdrop" aria-hidden="true"></div>
+    <nav class="mobile-menu pixel" id="mobileMenu" aria-label="Мобильная навигация" aria-hidden="true">
+      <a href="#main">MAIN</a>
+      <a href="#about">ABOUT</a>
+      <a href="#work">WORK</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
 
     <main>
       <section class="hero" id="main" aria-label="Главный экран">
@@ -48,16 +58,6 @@
             <a href="#about">about</a>
             <a href="#work">work</a>
             <a href="#contact">contact[/]</a>
-          </nav>
-          <button class="mobile-menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
-            <span></span><span></span><span></span>
-          </button>
-          <div class="mobile-menu-backdrop" aria-hidden="true"></div>
-          <nav class="mobile-menu pixel" id="mobileMenu" aria-label="Мобильная навигация" aria-hidden="true">
-            <a href="#main">MAIN</a>
-            <a href="#about">ABOUT</a>
-            <a href="#work">WORK</a>
-            <a href="#contact">CONTACT</a>
           </nav>
           <p class="hero__intro">
             Я Ангелина Дубатова — веб-дизайнер<br />
@@ -107,6 +107,25 @@
             <span>Python</span><span>SQL</span><span>HTML</span><span>CSS</span>
           </div>
           <div class="about__folder" aria-hidden="true"></div>
+          <section class="about-mobile-panel" data-about-mode="about" aria-label="Информация и навыки">
+            <div class="about-mobile-switch">
+              <span class="about-mobile-switch__label is-active" data-about-label="about">ABOUT</span>
+              <button class="about-mobile-switch__toggle" type="button" aria-label="Показать STACK" aria-pressed="false"></button>
+              <span class="about-mobile-switch__label" data-about-label="stack">STACK</span>
+            </div>
+            <div class="about-mobile-content">
+              <div class="about-mobile-page is-active" data-about-page="about">
+                <p>Создаю сайты и цифровые продукты, где эстетика встречается с функциональностью. Помогаю брендам находить собственный визуальный язык и превращать идеи в цифровые решения, которыми хочется пользоваться.</p>
+              </div>
+              <div class="about-mobile-page about-mobile-page--stack" data-about-page="stack">
+                <div class="about-mobile-stack pixel">
+                  <span>Figma</span><span>Adobe Photoshop</span><span>Adobe Illustrator</span>
+                  <span>Python</span><span>SQL</span><span>HTML / CSS</span>
+                </div>
+                <img src="./public/assets/about-folder.png" alt="Папка с инструментами" />
+              </div>
+            </div>
+          </section>
         </div>
         <div class="about__footer pixel">
           <span>DESIGN &amp; DEVELOPING</span>
@@ -231,7 +250,7 @@
         }
       }
     </script>
-    <script src="./script.js?v=23"></script>
+    <script src="./script.js?v=24"></script>
     <script type="module">
       import("./logo-transition.js?v=25").catch((error) => {
         console.error("3D transition failed:", error);
