@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=32" />
+    <link rel="stylesheet" href="./styles.css?v=33" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -48,6 +48,16 @@
             <a href="#about">about</a>
             <a href="#work">work</a>
             <a href="#contact">contact[/]</a>
+          </nav>
+          <button class="mobile-menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="mobile-menu-backdrop" aria-hidden="true"></div>
+          <nav class="mobile-menu pixel" id="mobileMenu" aria-label="Мобильная навигация" aria-hidden="true">
+            <a href="#main">MAIN</a>
+            <a href="#about">ABOUT</a>
+            <a href="#work">WORK</a>
+            <a href="#contact">CONTACT</a>
           </nav>
           <p class="hero__intro">
             Я Ангелина Дубатова — веб-дизайнер<br />
@@ -221,7 +231,7 @@
         }
       }
     </script>
-    <script src="./script.js?v=22"></script>
+    <script src="./script.js?v=23"></script>
     <script type="module">
       import("./logo-transition.js?v=25").catch((error) => {
         console.error("3D transition failed:", error);

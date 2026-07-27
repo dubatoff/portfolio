@@ -516,6 +516,12 @@ img {
   white-space: nowrap;
 }
 
+.mobile-menu-toggle,
+.mobile-menu,
+.mobile-menu-backdrop {
+  display: none;
+}
+
 .hero__header .nav {
   grid-column: 2;
   justify-self: end;
@@ -1204,7 +1210,16 @@ img {
 
   .loader__core { width: 92vw; }
   .loader__bottom span:last-child { display: none; }
-  .fixed-mark { top: auto; right: 12px; bottom: 16px; width: 83px; height: 40px; }
+  .fixed-mark {
+    top: auto;
+    right: 12px;
+    bottom: 16px;
+    width: 83px;
+    height: 40px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .show-fixed-meta .fixed-mark { opacity: 1; }
 
   .hero {
     min-height: 100svh;
@@ -1217,32 +1232,143 @@ img {
   }
 
   .hero__header {
+    top: 26px;
+    right: 20px;
+    left: 20px;
     grid-template-columns: 1fr;
   }
 
-  .brand-block { display: flex; justify-content: space-between; align-items: start; }
+  .brand-block {
+    display: block;
+    width: max-content;
+  }
   .brand-block .brand { margin: 0; }
-  .nav { position: absolute; top: 58px; right: 0; left: 0; justify-content: space-between; }
+  .brand-block p {
+    margin-top: 8px;
+    font-size: clamp(16px, 5.2vw, 22px);
+    letter-spacing: -0.04em;
+  }
+  .hero__header > .nav { display: none; }
+
+  .mobile-menu-toggle {
+    position: fixed;
+    z-index: 42;
+    top: 25px;
+    right: 20px;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    padding: 10px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 12px;
+    background: rgba(10, 15, 36, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    place-content: center;
+    gap: 5px;
+  }
+
+  .mobile-menu-toggle span {
+    display: block;
+    width: 23px;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+    transition: transform 0.28s var(--ease-out), opacity 0.2s ease;
+  }
+
+  .mobile-menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .mobile-menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .mobile-menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu-backdrop {
+    position: fixed;
+    z-index: 39;
+    inset: 0;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.12);
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    z-index: 41;
+    top: 76px;
+    right: 20px;
+    display: grid;
+    width: min(210px, calc(100vw - 40px));
+    padding: 14px;
+    visibility: hidden;
+    opacity: 0;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 18px;
+    background: rgba(10, 13, 26, 0.68);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+    transform: translateY(-10px) scale(0.97);
+    transform-origin: top right;
+    transition: opacity 0.28s ease, transform 0.28s var(--ease-out), visibility 0.28s ease;
+    gap: 7px;
+  }
+
+  .mobile-menu a {
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.055);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+
+  .mobile-menu.is-open,
+  .mobile-menu-backdrop.is-open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .mobile-menu.is-open { transform: translateY(0) scale(1); }
 
   .hero__intro {
     position: absolute;
-    top: 96px;
+    top: 116px;
     right: 0;
-    width: 72vw;
-    font-size: 14px;
+    width: min(82vw, 430px);
+    font-size: clamp(10px, 3.1vw, 14px);
+    line-height: 1.22;
+    text-align: right;
   }
 
-  .hero__center { top: 46%; }
+  .hero__center {
+    top: 49%;
+    width: 90vw;
+  }
   .hero__word {
     font-size: clamp(74px, 24vw, 124px);
     letter-spacing: -0.095em;
   }
 
   .hero__lower h1 {
-    max-width: 94vw;
-    margin-bottom: 34px;
-    font-size: clamp(34px, 11vw, 57px);
+    max-width: 78vw;
+    margin-bottom: 12px;
+    font-size: clamp(31px, 9.8vw, 48px);
   }
+
+  .hero__lower {
+    bottom: 18px;
+    left: 16px;
+  }
+
+  .hero__cursor-decoration {
+    right: 16px;
+    bottom: 34px;
+    width: clamp(82px, 25vw, 118px);
+  }
+
+  .hero .code-drop:nth-child(4),
+  .hero .code-drop:nth-child(n + 6) { display: none; }
 
   .hero__telemetry {
     grid-template-columns: 1fr 1fr;

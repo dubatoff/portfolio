@@ -14,11 +14,31 @@
   const about = document.getElementById("about");
   const aboutSignature = about?.querySelector(".about__signature");
   const hero = document.getElementById("main");
+  const mobileMenuToggle = document.querySelector(".mobile-menu-toggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const mobileMenuBackdrop = document.querySelector(".mobile-menu-backdrop");
   const qaMode = new URLSearchParams(window.location.search).has("qa");
   let heroVisible = true;
 
   body.classList.add("is-loading");
   body.classList.add("native-cursor");
+
+  function setMobileMenu(open) {
+    if (!mobileMenuToggle || !mobileMenu || !mobileMenuBackdrop) return;
+    mobileMenuToggle.setAttribute("aria-expanded", String(open));
+    mobileMenuToggle.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+    mobileMenu.setAttribute("aria-hidden", String(!open));
+    mobileMenu.classList.toggle("is-open", open);
+    mobileMenuBackdrop.classList.toggle("is-open", open);
+  }
+
+  mobileMenuToggle?.addEventListener("click", () => {
+    setMobileMenu(mobileMenuToggle.getAttribute("aria-expanded") !== "true");
+  });
+  mobileMenuBackdrop?.addEventListener("click", () => setMobileMenu(false));
+  mobileMenu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setMobileMenu(false));
+  });
 
   function runLoader() {
     const start = performance.now();
