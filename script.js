@@ -900,7 +900,32 @@
   };
 
   mobileProjectCards.forEach((card) => {
-    card.addEventListener("click", () => toggleMobileProject(card));
+    let tapStart = null;
+    let ignoreClickUntil = 0;
+
+    card.addEventListener("pointerdown", (event) => {
+      if (!mobileWorkQuery.matches || (event.pointerType !== "touch" && event.pointerType !== "pen")) return;
+      tapStart = { x: event.clientX, y: event.clientY, time: performance.now() };
+    }, { passive: true });
+
+    card.addEventListener("pointerup", (event) => {
+      if (!tapStart || !mobileWorkQuery.matches || (event.pointerType !== "touch" && event.pointerType !== "pen")) return;
+      const moved = Math.hypot(event.clientX - tapStart.x, event.clientY - tapStart.y);
+      const elapsed = performance.now() - tapStart.time;
+      tapStart = null;
+      if (moved > 14 || elapsed > 700) return;
+      ignoreClickUntil = performance.now() + 800;
+      event.preventDefault();
+      toggleMobileProject(card);
+    });
+
+    card.addEventListener("pointercancel", () => { tapStart = null; });
+
+    card.addEventListener("click", () => {
+      if (performance.now() < ignoreClickUntil) return;
+      toggleMobileProject(card);
+    });
+
     card.addEventListener("keydown", (event) => {
       if (!mobileWorkQuery.matches || (event.key !== "Enter" && event.key !== " ")) return;
       event.preventDefault();

@@ -1859,12 +1859,14 @@ img {
 
   .portfolio-screen:not(.portfolio-screen--music) .screen-card__main,
   .portfolio-screen:not(.portfolio-screen--music) .screen-card__placeholder {
-    object-fit: cover;
+    object-fit: contain;
     transition: opacity .24s ease, transform .34s var(--ease-out);
   }
 
   .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__main {
     opacity: 1;
+    filter: none;
+    transform: none;
   }
 
   .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__placeholder {
