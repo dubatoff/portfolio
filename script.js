@@ -867,6 +867,50 @@
     });
   });
 
+  const mobileWorkQuery = window.matchMedia("(max-width: 760px)");
+  const mobileProjectCards = [...document.querySelectorAll(".portfolio-screen:not(.portfolio-screen--music) .screen-card")];
+
+  const syncMobileProjectAccessibility = () => {
+    mobileProjectCards.forEach((card) => {
+      if (mobileWorkQuery.matches) {
+        const projectName = card.querySelector(".screen-card__main")?.alt || "Проект";
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("aria-label", `${projectName}. Коснитесь, чтобы показать заглушку`);
+        card.setAttribute("aria-pressed", String(card.classList.contains("is-placeholder")));
+      } else {
+        card.removeAttribute("role");
+        card.removeAttribute("tabindex");
+        card.removeAttribute("aria-label");
+        card.removeAttribute("aria-pressed");
+        card.classList.remove("is-placeholder");
+      }
+    });
+  };
+
+  const toggleMobileProject = (card) => {
+    if (!mobileWorkQuery.matches) return;
+    const isPlaceholder = card.classList.toggle("is-placeholder");
+    const projectName = card.querySelector(".screen-card__main")?.alt || "Проект";
+    card.setAttribute("aria-pressed", String(isPlaceholder));
+    card.setAttribute(
+      "aria-label",
+      `${projectName}. Коснитесь, чтобы показать ${isPlaceholder ? "проект" : "заглушку"}`
+    );
+  };
+
+  mobileProjectCards.forEach((card) => {
+    card.addEventListener("click", () => toggleMobileProject(card));
+    card.addEventListener("keydown", (event) => {
+      if (!mobileWorkQuery.matches || (event.key !== "Enter" && event.key !== " ")) return;
+      event.preventDefault();
+      toggleMobileProject(card);
+    });
+  });
+
+  mobileWorkQuery.addEventListener?.("change", syncMobileProjectAccessibility);
+  syncMobileProjectAccessibility();
+
   let heroTargetX = 0;
   let heroTargetY = 0;
   let heroCurrentX = 0;

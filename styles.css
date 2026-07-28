@@ -1588,6 +1588,8 @@ img {
   pointer-events: none;
   user-select: none;
 }
+.mobile-work-intro,
+.mobile-work-bar { display: none; }
 .screen-card {
   position: absolute;
   z-index: 3;
@@ -1737,9 +1739,156 @@ img {
     width: 84% !important;
     height: 47.25vw !important;
   }
-  .portfolio-screen--stl .screen-card--stl-page,
   .portfolio-screen--music .screen-card--music-a,
   .portfolio-screen--music .screen-card--music-b { display: none; }
+
+  .portfolio-screen:not(.portfolio-screen--music) {
+    display: flex;
+    width: 100%;
+    min-height: 100svh;
+    height: auto;
+    padding: 82px 16px 82px;
+    flex-direction: column;
+    gap: 22px;
+    aspect-ratio: auto;
+    background: #121312;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .portfolio-screen__reference {
+    opacity: 0;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .portfolio-nav {
+    display: none;
+  }
+
+  .mobile-work-intro {
+    position: relative;
+    z-index: 4;
+    display: block;
+    padding: 0 5px;
+  }
+
+  .mobile-work-intro::before {
+    display: block;
+    margin-bottom: 34px;
+    color: #e3e3db;
+    content: "DUBATOFF DESIGN";
+    font: 10px/1 "DOSFont", monospace;
+    letter-spacing: .08em;
+  }
+
+  .mobile-work-intro h3 {
+    max-width: 100%;
+    margin: 0 0 20px;
+    color: #e3e3db;
+    font-size: clamp(18px, 6.2vw, 25px);
+    font-weight: 400;
+    line-height: .92;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-work-intro p {
+    max-width: 33ch;
+    margin: 0;
+    color: #e3e3db;
+    font-family: "Roboto Mono", monospace;
+    font-size: clamp(15px, 4.5vw, 18px);
+    line-height: 1.16;
+    letter-spacing: -.02em;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card,
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card.work-card,
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card.work-card.is-visible {
+    position: relative;
+    z-index: 4;
+    top: auto !important;
+    left: auto !important;
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(227, 227, 219, .22);
+    border-radius: 19px;
+    background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+    box-shadow: 0 20px 46px rgba(0, 0, 0, .36);
+    transform: none !important;
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-work-bar {
+    display: flex;
+    min-height: 42px;
+    padding: 0 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid rgba(227, 227, 219, .16);
+    color: rgba(227, 227, 219, .64);
+    font-size: clamp(7px, 2.25vw, 9px);
+    line-height: 1;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  .mobile-work-bar strong {
+    color: #e3e3db;
+    font-weight: 400;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card .work-card__paper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border-radius: 0;
+    background: #d9d4ce;
+    transform: none !important;
+  }
+
+  .screen-card--akkon-booking .work-card__paper { aspect-ratio: 1.671 / 1; }
+  .screen-card--akkon-admin .work-card__paper { aspect-ratio: 1.757 / 1; }
+  .screen-card--stl-main .work-card__paper { aspect-ratio: 1.019 / 1; }
+  .screen-card--stl-page .work-card__paper { aspect-ratio: 1.581 / 1; }
+  .screen-card--agro .work-card__paper { aspect-ratio: 1.62 / 1; }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card__main,
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card__placeholder {
+    object-fit: cover;
+    transition: opacity .24s ease, transform .34s var(--ease-out);
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__main {
+    opacity: 1;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__placeholder {
+    opacity: 0;
+    transform: scale(1.018);
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card.is-placeholder .screen-card__main {
+    opacity: 0;
+  }
+
+  .portfolio-screen:not(.portfolio-screen--music) .screen-card.is-placeholder .screen-card__placeholder {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .portfolio-screen--stl {
+    padding-bottom: 100px;
+  }
+
+  .portfolio-screen--stl .screen-card + .screen-card {
+    margin-top: 2px;
+  }
+
   .contact { aspect-ratio: auto; }
   .contact__chrome nav { gap: 12px; font-size: 10px; }
   .contact__brand { font-size: 10px; }
