@@ -1851,8 +1851,8 @@ img {
     transform: none !important;
   }
 
-  .screen-card--akkon-booking .work-card__paper { aspect-ratio: 1.671 / 1; }
-  .screen-card--akkon-admin .work-card__paper { aspect-ratio: 1.757 / 1; }
+  .screen-card--akkon-booking .work-card__paper,
+  .screen-card--akkon-admin .work-card__paper { aspect-ratio: auto; }
   .screen-card--stl-main .work-card__paper { aspect-ratio: 1.019 / 1; }
   .screen-card--stl-page .work-card__paper { aspect-ratio: 1.581 / 1; }
   .screen-card--agro .work-card__paper { aspect-ratio: 1.62 / 1; }
@@ -1861,6 +1861,15 @@ img {
   .portfolio-screen:not(.portfolio-screen--music) .screen-card__placeholder {
     object-fit: contain;
     transition: opacity .24s ease, transform .34s var(--ease-out);
+  }
+
+  .screen-card--akkon-booking .screen-card__main,
+  .screen-card--akkon-admin .screen-card__main {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__main {
@@ -1885,6 +1894,10 @@ img {
 
   .portfolio-screen--stl {
     padding-bottom: 100px;
+  }
+
+  .portfolio-screen--akkon-booking {
+    padding-top: 42px !important;
   }
 
   .portfolio-screen--stl .screen-card + .screen-card {
@@ -2177,12 +2190,12 @@ img {
 @media (max-width: 760px) {
   .about {
     height: auto;
-    min-height: 1040px;
+    min-height: 900px;
     overflow: hidden;
   }
   .about__brand { top: 24px; left: 18px; font-size: 12px; }
   .about__nav { display: none; }
-  .about__stage { min-height: 1040px; }
+  .about__stage { min-height: 900px; }
   .about__portrait {
     top: 118px;
     left: 30px;
