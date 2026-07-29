@@ -1621,6 +1621,19 @@ img {
   height: 100%;
   object-fit: fill;
 }
+.screen-card__main-picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.screen-card__main-picture .screen-card__main {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
 .screen-card__main { transition: opacity .16s ease, transform .45s var(--ease-out), filter .2s ease; }
 .screen-card__placeholder {
   z-index: 4;
@@ -2005,7 +2018,10 @@ img {
   }
 
   .screen-card--akkon-admin .screen-card__main {
-    transform: scale(1.055);
+    inset: 0;
+    height: 100%;
+    object-fit: fill;
+    transform: none;
   }
 
   .portfolio-screen--agro .screen-card,
@@ -2021,20 +2037,23 @@ img {
   }
 
   .portfolio-screen--agro .screen-card .work-card__paper {
-    aspect-ratio: auto;
-    overflow: visible;
+    aspect-ratio: 1.6196 / 1;
+    overflow: hidden;
     border: 0;
     border-radius: 0;
     background: transparent;
   }
 
   .portfolio-screen--agro .screen-card__main {
-    position: relative;
-    inset: auto;
+    position: absolute;
+    top: -6px;
+    right: 0;
+    bottom: auto;
+    left: 0;
     display: block;
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: calc(100% + 12px);
+    object-fit: fill;
     transform: none;
     border-radius: 18px;
   }
@@ -2084,6 +2103,25 @@ img {
     border: 1px solid rgba(227, 227, 219, .22);
     border-radius: 18px;
     background: #d9d4ce;
+  }
+
+  .akkon-filmstrip .portfolio-screen .screen-card--akkon-admin {
+    width: 85% !important;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-admin .work-card__paper {
+    aspect-ratio: 436 / 286;
+    border-radius: 10px;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-admin .screen-card__main-picture,
+  .akkon-filmstrip .screen-card--akkon-admin .screen-card__main {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .portfolio-screen--stl { padding-bottom: 52px; }
@@ -2787,8 +2825,10 @@ img {
   }
 
   .akkon-filmstrip .screen-card--akkon-admin .screen-card__main,
-  .akkon-filmstrip .screen-card--akkon-admin:hover .screen-card__main {
-    transform: scale(1.055);
+  .akkon-filmstrip .screen-card--akkon-admin:hover .screen-card__main,
+  .portfolio-screen--agro .screen-card__main,
+  .portfolio-screen--agro .screen-card:hover .screen-card__main {
+    transform: none;
   }
 
   .logo-transition { height: 360svh; }

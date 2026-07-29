@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=42" />
+    <link rel="stylesheet" href="./styles.css?v=44" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -61,7 +61,7 @@
           </nav>
           <p class="hero__intro">
             Я Ангелина Дубатова — веб-дизайнер<br />
-            и разработчик Создаю сайты и цифровые<br />
+            и разработчик. Создаю сайты и цифровые<br />
             продукты, помогая брендам обрести<br />
             собственный визуальный язык
           </p>
@@ -169,7 +169,10 @@
           <div class="screen-card screen-card--akkon-admin work-card is-visible" data-tilt>
             <div class="mobile-work-bar pixel"><strong>AKKON</strong><span>TOUCH · CODING PROJECT</span></div>
             <div class="work-card__paper">
-              <img class="screen-card__main" src="./public/assets/work-02-akkon-hq.jpg" alt="AKKON — административный аккаунт" />
+              <picture class="screen-card__main-picture screen-card__main-picture--akkon-admin">
+                <source media="(max-width: 760px)" srcset="./public/assets/work-02-akkon-mobile.jpg?v=1" />
+                <img class="screen-card__main" src="./public/assets/work-02-akkon-hq.jpg" alt="AKKON — административный аккаунт" />
+              </picture>
               <img class="screen-card__placeholder" src="./public/assets/Закрывашка для 2 изображения.jpg?v=4" alt="" />
             </div>
           </div>
