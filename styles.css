@@ -1686,6 +1686,9 @@ img {
 .screen-card__akkon-label {
   display: none;
 }
+.screen-card__agro-label {
+  display: none;
+}
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
@@ -2879,9 +2882,40 @@ img {
     opacity: 1;
   }
 
-  .portfolio-screen--agro .screen-card.is-placeholder .screen-card__placeholder,
-  .portfolio-screen--agro .screen-card:hover .screen-card__placeholder {
-    transform: translateX(-2px);
+  .portfolio-screen--agro .screen-card.is-placeholder .work-card__paper::after,
+  .portfolio-screen--agro .screen-card:hover .work-card__paper::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    display: block;
+    width: 38%;
+    height: 18px;
+    background: #d9d4ce;
+    content: "";
+    pointer-events: none;
+  }
+
+  .portfolio-screen--agro .screen-card .screen-card__agro-label {
+    position: absolute;
+    top: 0;
+    right: calc(3.3% + 2px);
+    z-index: 6;
+    display: block;
+    padding: 2px 3px;
+    color: #121312;
+    background: #c0fe04;
+    box-shadow: 18px 0 0 #d9d4ce;
+    font-size: clamp(8px, 2.35vw, 10px);
+    line-height: 1;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .portfolio-screen--agro .screen-card.is-placeholder .screen-card__agro-label,
+  .portfolio-screen--agro .screen-card:hover .screen-card__agro-label {
+    opacity: 1;
   }
 
   .akkon-filmstrip .screen-card--akkon-admin .screen-card__main,
