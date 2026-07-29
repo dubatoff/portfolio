@@ -57,6 +57,7 @@ if (section && canvas && portal && contact) {
   modelRoot.add(parallaxRoot);
 
   let model = null;
+  let modelBoundsCorners = [];
   let baseScale = 1;
   let scrollProgress = 0;
   let renderedProgress = 0;
@@ -87,6 +88,42 @@ if (section && canvas && portal && contact) {
     return normalized * normalized * (3 - 2 * normalized);
   }
 
+  function centerMobileModelInViewport() {
+    if (!window.matchMedia("(max-width: 760px)").matches || !modelBoundsCorners.length) return;
+
+    modelRoot.updateMatrixWorld(true);
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    modelBoundsCorners.forEach((corner) => {
+      const projected = corner
+        .clone()
+        .applyMatrix4(modelRoot.matrixWorld)
+        .project(camera);
+      minX = Math.min(minX, projected.x);
+      maxX = Math.max(maxX, projected.x);
+      minY = Math.min(minY, projected.y);
+      maxY = Math.max(maxY, projected.y);
+    });
+
+    const projectedCenterX = (minX + maxX) * 0.5;
+    const projectedCenterY = (minY + maxY) * 0.5;
+    const projectedRoot = new THREE.Vector3()
+      .setFromMatrixPosition(modelRoot.matrixWorld)
+      .project(camera);
+    const viewportCenter = new THREE.Vector3(0, 0, projectedRoot.z).unproject(camera);
+    const correctedCenter = new THREE.Vector3(
+      -projectedCenterX,
+      -projectedCenterY,
+      projectedRoot.z,
+    ).unproject(camera);
+
+    modelRoot.position.x += correctedCenter.x - viewportCenter.x;
+    modelRoot.position.y += correctedCenter.y - viewportCenter.y;
+  }
+
   function alignContactAnchor() {
     if (window.location.hash !== "#contact") return;
     const sectionTop = window.scrollY + section.getBoundingClientRect().top;
@@ -111,8 +148,9 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.y = -0.23 + rotationPhase * Math.PI * 2;
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     const isMobileLayout = window.matchMedia("(max-width: 760px)").matches;
-    modelRoot.position.x = isMobileLayout ? 0.18 : 0;
-    modelRoot.position.y = (isMobileLayout ? 0.16 : 0.03) - finalRush * 0.03;
+    modelRoot.position.x = 0;
+    modelRoot.position.y = 0.03 - finalRush * 0.03;
+    if (isMobileLayout) centerMobileModelInViewport();
 
     const darkScreenPhase = smoothstep(0.94, 0.97, progress);
     portal.style.opacity = String(darkScreenPhase);
@@ -184,6 +222,19 @@ if (section && canvas && portal && contact) {
       const center = bounds.getCenter(new THREE.Vector3());
       const size = bounds.getSize(new THREE.Vector3());
       model.position.sub(center);
+      model.updateMatrixWorld(true);
+      const centeredBounds = new THREE.Box3().setFromObject(model);
+      const { min, max } = centeredBounds;
+      modelBoundsCorners = [
+        new THREE.Vector3(min.x, min.y, min.z),
+        new THREE.Vector3(min.x, min.y, max.z),
+        new THREE.Vector3(min.x, max.y, min.z),
+        new THREE.Vector3(min.x, max.y, max.z),
+        new THREE.Vector3(max.x, min.y, min.z),
+        new THREE.Vector3(max.x, min.y, max.z),
+        new THREE.Vector3(max.x, max.y, min.z),
+        new THREE.Vector3(max.x, max.y, max.z),
+      ];
       const mobileScale = window.matchMedia("(max-width: 760px)").matches ? 1.72 : 2.15;
       baseScale = mobileScale / Math.max(0.001, size.x);
 
