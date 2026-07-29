@@ -1683,6 +1683,9 @@ img {
 .screen-card:hover .screen-card__music-label {
   opacity: 1;
 }
+.screen-card__akkon-label {
+  display: none;
+}
 .screen-card--agro .screen-card__main {
   transform: scale(1.006);
 }
@@ -2848,6 +2851,32 @@ img {
   .portfolio-screen--music .screen-card:not(.is-placeholder) .screen-card__music-label,
   .portfolio-screen--music .screen-card:not(.is-placeholder):hover .screen-card__music-label {
     opacity: 0;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__placeholder,
+  .akkon-filmstrip .screen-card--akkon-booking:hover .screen-card__placeholder {
+    transform: translateY(-5.5%) scale(1.025) !important;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-booking .screen-card__akkon-label {
+    position: absolute;
+    top: 0;
+    right: 3.3%;
+    z-index: 6;
+    display: block;
+    padding: 2px 3px;
+    color: #121312;
+    background: #c0fe04;
+    font-size: clamp(8px, 2.35vw, 10px);
+    line-height: 1;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__akkon-label,
+  .akkon-filmstrip .screen-card--akkon-booking:hover .screen-card__akkon-label {
+    opacity: 1;
   }
 
   .akkon-filmstrip .screen-card--akkon-admin .screen-card__main,
