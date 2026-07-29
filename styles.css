@@ -2882,8 +2882,7 @@ img {
     opacity: 1;
   }
 
-  .portfolio-screen--agro .screen-card.is-placeholder .work-card__paper::after,
-  .portfolio-screen--agro .screen-card:hover .work-card__paper::after {
+  .portfolio-screen--agro .screen-card.is-placeholder .work-card__paper::after {
     position: absolute;
     top: 0;
     right: 0;
@@ -2913,8 +2912,7 @@ img {
     pointer-events: none;
   }
 
-  .portfolio-screen--agro .screen-card.is-placeholder .screen-card__agro-label,
-  .portfolio-screen--agro .screen-card:hover .screen-card__agro-label {
+  .portfolio-screen--agro .screen-card.is-placeholder .screen-card__agro-label {
     opacity: 1;
   }
 
