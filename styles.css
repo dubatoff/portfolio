@@ -2856,8 +2856,7 @@ img {
     opacity: 0;
   }
 
-  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__placeholder,
-  .akkon-filmstrip .screen-card--akkon-booking:hover .screen-card__placeholder {
+  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__placeholder {
     transform: translateY(-5.5%) scale(1.025) !important;
   }
 
@@ -2877,8 +2876,7 @@ img {
     pointer-events: none;
   }
 
-  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__akkon-label,
-  .akkon-filmstrip .screen-card--akkon-booking:hover .screen-card__akkon-label {
+  .akkon-filmstrip .screen-card--akkon-booking.is-placeholder .screen-card__akkon-label {
     opacity: 1;
   }
 
