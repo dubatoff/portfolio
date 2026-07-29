@@ -154,10 +154,6 @@ if (section && canvas && portal && contact) {
     const isMobileLayout = window.matchMedia("(max-width: 760px)").matches;
     modelRoot.position.x = isMobileLayout ? -0.06 * finalRush : 0;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
-    if (isMobileLayout) {
-      const mobileCenterCorrection = 1 - smoothstep(0.72, 0.9, progress);
-      centerMobileModelInViewport(mobileCenterCorrection);
-    }
 
     const darkScreenPhase = smoothstep(0.94, 0.97, progress);
     portal.style.opacity = String(darkScreenPhase);
@@ -284,9 +280,17 @@ if (section && canvas && portal && contact) {
       requestAnimationFrame(render);
       return;
     }
+    const isMobileLayout = window.matchMedia("(max-width: 760px)").matches;
     const progressDelta = Math.abs(scrollProgress - renderedProgress);
     const pointerDelta = pointerCurrent.distanceTo(pointerTarget);
-    renderedProgress = scrollProgress;
+    if (isMobileLayout && !reduceMotion) {
+      renderedProgress += (scrollProgress - renderedProgress) * 0.2;
+      if (Math.abs(scrollProgress - renderedProgress) < 0.0001) {
+        renderedProgress = scrollProgress;
+      }
+    } else {
+      renderedProgress = scrollProgress;
+    }
     pointerCurrent.lerp(pointerTarget, reduceMotion ? 1 : 0.12);
     parallaxRoot.rotation.x = pointerCurrent.y * -0.11;
     parallaxRoot.rotation.y = pointerCurrent.x * 0.15;
