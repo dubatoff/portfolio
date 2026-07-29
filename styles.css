@@ -2879,6 +2879,11 @@ img {
     opacity: 1;
   }
 
+  .portfolio-screen--agro .screen-card.is-placeholder .screen-card__placeholder,
+  .portfolio-screen--agro .screen-card:hover .screen-card__placeholder {
+    transform: translateX(-2px);
+  }
+
   .akkon-filmstrip .screen-card--akkon-admin .screen-card__main,
   .akkon-filmstrip .screen-card--akkon-admin:hover .screen-card__main,
   .portfolio-screen--agro .screen-card__main,
