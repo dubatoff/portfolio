@@ -868,7 +868,7 @@
   });
 
   const mobileWorkQuery = window.matchMedia("(max-width: 760px)");
-  const mobileProjectCards = [...document.querySelectorAll(".portfolio-screen:not(.portfolio-screen--music) .screen-card")];
+  const mobileProjectCards = [...document.querySelectorAll(".portfolio-screen .screen-card")];
 
   const syncMobileProjectAccessibility = () => {
     mobileProjectCards.forEach((card) => {

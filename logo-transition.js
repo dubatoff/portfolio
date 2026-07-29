@@ -110,7 +110,9 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.x = -0.115 + Math.sin(rotationPhase * Math.PI) * 0.08;
     modelRoot.rotation.y = -0.23 + rotationPhase * Math.PI * 2;
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
-    modelRoot.position.y = 0.03 - finalRush * 0.03;
+    const isMobileLayout = window.matchMedia("(max-width: 760px)").matches;
+    modelRoot.position.x = isMobileLayout ? 0.18 : 0;
+    modelRoot.position.y = (isMobileLayout ? 0.16 : 0.03) - finalRush * 0.03;
 
     const darkScreenPhase = smoothstep(0.94, 0.97, progress);
     portal.style.opacity = String(darkScreenPhase);
@@ -182,7 +184,8 @@ if (section && canvas && portal && contact) {
       const center = bounds.getCenter(new THREE.Vector3());
       const size = bounds.getSize(new THREE.Vector3());
       model.position.sub(center);
-      baseScale = 2.15 / Math.max(0.001, size.x);
+      const mobileScale = window.matchMedia("(max-width: 760px)").matches ? 1.72 : 2.15;
+      baseScale = mobileScale / Math.max(0.001, size.x);
 
       modelReady = true;
       scrollProgress = transitionTrigger.progress;
@@ -264,6 +267,10 @@ if (section && canvas && portal && contact) {
   window.addEventListener("scroll", updateTransitionVisibility, { passive: true });
   updateTransitionVisibility();
   window.addEventListener("pointermove", (event) => {
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      pointerTarget.set(0, 0);
+      return;
+    }
     pointerTarget.set(
       THREE.MathUtils.clamp((event.clientX / window.innerWidth) * 2 - 1, -1, 1),
       THREE.MathUtils.clamp((event.clientY / window.innerHeight) * 2 - 1, -1, 1),

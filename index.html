@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" href="./public/favicon.png" />
     <link rel="preload" href="./public/fonts/SF-Pro-Display-Regular.otf" as="font" type="font/otf" crossorigin />
     <link rel="preload" href="./public/fonts/DOSFont.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=39" />
+    <link rel="stylesheet" href="./styles.css?v=42" />
   </head>
   <body>
     <div class="loader" id="loader" aria-label="Загрузка сайта">
@@ -139,6 +139,12 @@
       <section class="works" id="work" aria-labelledby="worksTitle">
         <h2 id="worksTitle" class="sr-only">Работы</h2>
 
+        <div class="akkon-filmstrip">
+          <div class="mobile-work-intro mobile-work-intro--akkon">
+            <h3 class="pixel">&lt;AKKON&gt;</h3>
+            <p>Разработка корпоративного портала для российского офиса компании. Проект автоматизировал внутренние процессы и сократил время выполнения рутинных задач, что позволило повысить продуктивность сотрудников примерно на 70%.</p>
+          </div>
+          <div class="akkon-filmstrip__track">
         <article class="portfolio-screen portfolio-screen--akkon-booking">
           <img class="portfolio-screen__reference" src="./public/assets/screen-03-reference-clean-v5.png" alt="" />
           <div class="mobile-work-intro">
@@ -168,6 +174,8 @@
             </div>
           </div>
         </article>
+          </div>
+        </div>
 
         <article class="portfolio-screen portfolio-screen--stl">
           <img class="portfolio-screen__reference" src="./public/assets/screen-05-reference-clean-v5.png" alt="" />
@@ -208,6 +216,11 @@
 
         <article class="portfolio-screen portfolio-screen--music">
           <img class="portfolio-screen__reference" src="./public/assets/screen-07-reference-clean-v5.png" alt="" />
+          <div class="mobile-work-intro mobile-work-intro--music">
+            <h3 class="pixel">&lt;МУЗЫКАЛЬНЫЕ ОБЛОЖКИ&gt;</h3>
+            <p>Создание авторских обложек для музыкальных релизов, где каждый дизайн становится визуальным продолжением самого трека.</p>
+          </div>
+          <div class="music-filmstrip__track">
           <div class="screen-card screen-card--music-player work-card is-visible" data-tilt>
             <div class="work-card__paper">
               <img class="screen-card__main" src="./public/assets/work-06-adredash.jpg" alt="ADREDASH — музыкальный релиз" />
@@ -228,6 +241,7 @@
               <img class="screen-card__placeholder" src="./public/assets/Закрывашка для обложки так тянет.jpg?v=3" alt="" />
               <span class="screen-card__music-label" aria-hidden="true">DESIGN PROJECT</span>
             </div>
+          </div>
           </div>
         </article>
       </section>
@@ -271,9 +285,9 @@
         }
       }
     </script>
-    <script src="./script.js?v=27"></script>
+    <script src="./script.js?v=28"></script>
     <script type="module">
-      import("./logo-transition.js?v=25").catch((error) => {
+      import("./logo-transition.js?v=27").catch((error) => {
         console.error("3D transition failed:", error);
         const status = document.getElementById("logoTransitionLoading");
         if (status) status.textContent = "3D ERROR";

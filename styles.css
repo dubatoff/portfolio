@@ -1590,6 +1590,9 @@ img {
 }
 .mobile-work-intro,
 .mobile-work-bar { display: none; }
+.akkon-filmstrip,
+.akkon-filmstrip__track,
+.music-filmstrip__track { display: contents; }
 .screen-card {
   position: absolute;
   z-index: 3;
@@ -1739,15 +1742,12 @@ img {
     width: 84% !important;
     height: 47.25vw !important;
   }
-  .portfolio-screen--music .screen-card--music-a,
-  .portfolio-screen--music .screen-card--music-b { display: none; }
-
   .portfolio-screen:not(.portfolio-screen--music) {
     display: flex;
     width: 100%;
-    min-height: 100svh;
+    min-height: 0;
     height: auto;
-    padding: 82px 16px 82px;
+    padding: 42px 16px 52px;
     flex-direction: column;
     gap: 22px;
     aspect-ratio: auto;
@@ -1822,7 +1822,7 @@ img {
   }
 
   .mobile-work-bar {
-    display: flex;
+    display: none;
     min-height: 42px;
     padding: 0 12px;
     align-items: center;
@@ -1852,7 +1852,7 @@ img {
   }
 
   .screen-card--akkon-booking .work-card__paper,
-  .screen-card--akkon-admin .work-card__paper { aspect-ratio: auto; }
+  .screen-card--akkon-admin .work-card__paper { aspect-ratio: 1.671 / 1; }
   .screen-card--stl-main .work-card__paper { aspect-ratio: 1.019 / 1; }
   .screen-card--stl-page .work-card__paper { aspect-ratio: 1.581 / 1; }
   .screen-card--agro .work-card__paper { aspect-ratio: 1.62 / 1; }
@@ -1863,13 +1863,180 @@ img {
     transition: opacity .24s ease, transform .34s var(--ease-out);
   }
 
-  .screen-card--akkon-booking .screen-card__main,
-  .screen-card--akkon-admin .screen-card__main {
+  .akkon-filmstrip {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 42px 0 52px;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(227,227,219,.13) 1px, transparent 1px) 0 0 / 100% 25%,
+      linear-gradient(90deg, rgba(227,227,219,.13) 1px, transparent 1px) 0 0 / 33.333% 100%,
+      #121312;
+  }
+
+  .mobile-work-intro--akkon {
+    padding: 0 21px;
+  }
+
+  .akkon-filmstrip > .mobile-work-intro--akkon {
+    display: block;
+  }
+
+  .akkon-filmstrip__track {
+    display: flex;
+    gap: 12px;
+    margin-top: 34px;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .akkon-filmstrip__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .akkon-filmstrip .portfolio-screen {
+    flex: 0 0 calc(100% - 32px);
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .akkon-filmstrip .portfolio-screen::before,
+  .akkon-filmstrip .portfolio-screen::after {
+    display: none;
+  }
+
+  .akkon-filmstrip .portfolio-screen > .mobile-work-intro {
+    display: none;
+  }
+
+  .portfolio-screen--music {
+    display: block;
+    min-height: 0;
+    height: auto;
+    padding: 42px 0 52px;
+    aspect-ratio: auto;
+    background:
+      linear-gradient(rgba(227,227,219,.13) 1px, transparent 1px) 0 0 / 100% 25%,
+      linear-gradient(90deg, rgba(227,227,219,.13) 1px, transparent 1px) 0 0 / 33.333% 100%,
+      #121312;
+  }
+
+  .portfolio-screen--music .portfolio-screen__reference,
+  .portfolio-screen--music::before,
+  .portfolio-screen--music::after {
+    display: none;
+  }
+
+  .mobile-work-intro--music {
+    display: block;
+    padding: 0 21px;
+  }
+
+  .music-filmstrip__track {
+    display: flex;
+    gap: 12px;
+    margin-top: 34px;
+    padding: 0 16px 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .music-filmstrip__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .portfolio-screen--music .music-filmstrip__track .screen-card {
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    display: block;
+    flex: 0 0 calc(100% - 48px);
+    width: auto !important;
+    height: auto !important;
+    margin: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    transform: none !important;
+  }
+
+  .portfolio-screen--music .music-filmstrip__track .work-card__paper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    border: 1px solid rgba(227, 227, 219, .22);
+    border-radius: 18px;
+    background: #d9d4ce;
+  }
+
+  .portfolio-screen--music .music-filmstrip__track .screen-card__main {
     position: relative;
     inset: auto;
     display: block;
     width: 100%;
     height: auto;
+    object-fit: contain;
+  }
+
+  .portfolio-screen--music .music-filmstrip__track .screen-card__placeholder {
+    object-fit: cover;
+  }
+
+  .screen-card--akkon-booking .screen-card__main,
+  .screen-card--akkon-admin .screen-card__main {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .screen-card--akkon-admin .screen-card__main {
+    transform: scale(1.055);
+  }
+
+  .portfolio-screen--agro .screen-card,
+  .portfolio-screen--agro .screen-card.work-card,
+  .portfolio-screen--agro .screen-card.work-card.is-visible {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .portfolio-screen--agro .screen-card .work-card__paper {
+    aspect-ratio: auto;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .portfolio-screen--agro .screen-card__main {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    transform: none;
+    border-radius: 18px;
   }
 
   .portfolio-screen:not(.portfolio-screen--music) .screen-card:hover .screen-card__main {
@@ -1892,16 +2059,55 @@ img {
     transform: scale(1);
   }
 
-  .portfolio-screen--stl {
-    padding-bottom: 100px;
+  .akkon-filmstrip .screen-card,
+  .akkon-filmstrip .screen-card.work-card,
+  .akkon-filmstrip .screen-card.work-card.is-visible {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
-  .portfolio-screen--akkon-booking {
-    padding-top: 42px !important;
+  .akkon-filmstrip .mobile-work-bar {
+    min-height: 0;
+    margin-bottom: 9px;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
+
+  .akkon-filmstrip .screen-card .work-card__paper {
+    overflow: hidden;
+    border: 1px solid rgba(227, 227, 219, .22);
+    border-radius: 18px;
+    background: #d9d4ce;
+  }
+
+  .portfolio-screen--stl { padding-bottom: 52px; }
 
   .portfolio-screen--stl .screen-card + .screen-card {
-    margin-top: 2px;
+    margin-top: 12px;
+  }
+
+  .portfolio-screen--music .screen-card:hover .screen-card__main {
+    opacity: 1;
+  }
+
+  .portfolio-screen--music .screen-card:hover .screen-card__placeholder {
+    opacity: 0;
+    transform: scale(1.018);
+  }
+
+  .portfolio-screen--music .screen-card.is-placeholder .screen-card__main {
+    opacity: 0;
+  }
+
+  .portfolio-screen--music .screen-card.is-placeholder .screen-card__placeholder {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .contact { aspect-ratio: auto; }
@@ -2550,8 +2756,59 @@ img {
 .contact__cursor-3d { display: none !important; }
 
 @media (max-width: 760px) {
+  .about,
+  .akkon-filmstrip,
+  .works > .portfolio-screen,
+  .logo-transition__grid {
+    background-color: #121312;
+    background-image:
+      linear-gradient(
+        to bottom,
+        rgba(227, 227, 219, .13) 0,
+        rgba(227, 227, 219, .13) 1px,
+        transparent 1px,
+        transparent 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(227, 227, 219, .13) 0,
+        rgba(227, 227, 219, .13) 1px,
+        transparent 1px,
+        transparent 100%
+      );
+    background-repeat: repeat-y, repeat-x;
+    background-size: 100% 25svh, calc((100% - 32px) / 3) 100%;
+    background-position: 0 0, 16px 0;
+  }
+
+  .portfolio-screen::before,
+  .portfolio-screen::after {
+    display: none;
+  }
+
+  .akkon-filmstrip .screen-card--akkon-admin .screen-card__main,
+  .akkon-filmstrip .screen-card--akkon-admin:hover .screen-card__main {
+    transform: scale(1.055);
+  }
+
   .logo-transition { height: 360svh; }
+  .logo-transition__canvas {
+    inset: 0;
+    margin: auto;
+  }
   .logo-transition__chrome > a { top: 24px; left: 18px; font-size: 10px; }
   .logo-transition__chrome nav { top: 24px; right: 18px; gap: 12px; font-size: 10px; }
   .contact { min-height: 100svh; }
+  .contact__content h2 {
+    margin-bottom: 32px;
+    font-size: clamp(50px, 15vw, 70px);
+    line-height: .84;
+  }
+  .contact__button {
+    width: min(190px, 48vw);
+    height: 44px;
+  }
+  .contact__button span:first-child::after {
+    font-size: clamp(15px, 4.5vw, 19px);
+  }
 }
