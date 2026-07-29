@@ -88,8 +88,12 @@ if (section && canvas && portal && contact) {
     return normalized * normalized * (3 - 2 * normalized);
   }
 
-  function centerMobileModelInViewport() {
-    if (!window.matchMedia("(max-width: 760px)").matches || !modelBoundsCorners.length) return;
+  function centerMobileModelInViewport(correctionWeight = 1) {
+    if (
+      correctionWeight <= 0 ||
+      !window.matchMedia("(max-width: 760px)").matches ||
+      !modelBoundsCorners.length
+    ) return;
 
     modelRoot.updateMatrixWorld(true);
     let minX = Infinity;
@@ -120,8 +124,8 @@ if (section && canvas && portal && contact) {
       projectedRoot.z,
     ).unproject(camera);
 
-    modelRoot.position.x += correctedCenter.x - viewportCenter.x;
-    modelRoot.position.y += correctedCenter.y - viewportCenter.y;
+    modelRoot.position.x += (correctedCenter.x - viewportCenter.x) * correctionWeight;
+    modelRoot.position.y += (correctedCenter.y - viewportCenter.y) * correctionWeight;
   }
 
   function alignContactAnchor() {
@@ -148,9 +152,12 @@ if (section && canvas && portal && contact) {
     modelRoot.rotation.y = -0.23 + rotationPhase * Math.PI * 2;
     modelRoot.rotation.z = -0.045 + rotationPhase * 0.05;
     const isMobileLayout = window.matchMedia("(max-width: 760px)").matches;
-    modelRoot.position.x = 0;
+    modelRoot.position.x = isMobileLayout ? -0.06 * finalRush : 0;
     modelRoot.position.y = 0.03 - finalRush * 0.03;
-    if (isMobileLayout) centerMobileModelInViewport();
+    if (isMobileLayout) {
+      const mobileCenterCorrection = 1 - smoothstep(0.72, 0.9, progress);
+      centerMobileModelInViewport(mobileCenterCorrection);
+    }
 
     const darkScreenPhase = smoothstep(0.94, 0.97, progress);
     portal.style.opacity = String(darkScreenPhase);
